@@ -22,5 +22,12 @@ class Settings(BaseSettings):
     pin_max_failed_attempts: int = 5
     pin_lockout_minutes: int = 15
 
+    sms_provider: str = "console"  # "console" | "arkesel"
+    arkesel_api_key: str | None = None
+    arkesel_sender_id: str = "Pharmly"
+    # None => infer from `environment` (sandbox everywhere except "prod").
+    # Set explicitly to override that inference regardless of environment.
+    arkesel_sandbox: bool | None = None
+
 
 settings = Settings()

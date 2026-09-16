@@ -9,7 +9,7 @@ from app.core.exceptions import ApiError
 from app.core.security import generate_otp_code, hash_otp, verify_otp_code
 from app.core.time import utcnow
 from app.models.otp import OtpCode
-from app.services.sms import get_sms_sender
+from app.services.sms import SmsSendError, get_sms_sender
 
 
 async def request_otp(db: AsyncSession, phone_number: str) -> None:
@@ -52,7 +52,13 @@ async def request_otp(db: AsyncSession, phone_number: str) -> None:
     db.add(otp)
     await db.commit()
 
-    await get_sms_sender().send_otp(phone_number, code)
+    try:
+        await get_sms_sender().send_otp(phone_number, code)
+    except SmsSendError as err:
+        raise ApiError(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            "Couldn't send the verification code. Please try again.",
+        ) from err
 
 
 async def verify_otp(db: AsyncSession, phone_number: str, code: str) -> None:
