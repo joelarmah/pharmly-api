@@ -12,4 +12,32 @@ FastAPI · Pydantic v2 · SQLAlchemy 2.0 + Alembic · PostgreSQL · JWT auth · 
 
 ## Status
 
-Pre-implementation — this repo currently holds only the PRD and agent guidance. See the PRD's §9 ("Open questions for the product owner") for decisions that need to be made before some domains (SMS provider, Paystack account, pharmacy partner data, medicine catalog management) can be fully built.
+Auth domain (PRD §5.1) is implemented. See the PRD's §9 ("Open questions for the product owner") for decisions that need to be made before other domains (Paystack account, pharmacy partner data, medicine catalog management) can be fully built.
+
+## Running locally
+
+**Docker (recommended):**
+
+```
+cp .env.example .env   # then fill in JWT_SECRET and (optionally) ARKESEL_API_KEY
+docker compose up --build
+```
+
+This starts Postgres and the API, running migrations automatically on startup. The API is then at `http://localhost:8000` (`/docs` for interactive OpenAPI docs).
+
+**Without Docker:**
+
+```
+python3.12 -m venv .venv
+.venv/bin/pip install -e ".[dev]"
+cp .env.example .env   # point DATABASE_URL at your own Postgres
+.venv/bin/alembic upgrade head
+.venv/bin/uvicorn app.main:app --reload
+```
+
+**Tests and linting:**
+
+```
+.venv/bin/pytest
+.venv/bin/ruff check .
+```

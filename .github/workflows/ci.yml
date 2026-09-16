@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - uses: reviewdog/action-setup@v1
+        with:
+          reviewdog_version: latest
+
+      - name: Ruff
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REPORTER=github-check
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            REPORTER=github-pr-review
+          fi
+          ruff check --output-format=rdjson . | reviewdog -f=rdjson -name=ruff -reporter="$REPORTER" -fail-level=error
+
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Run tests
+        run: pytest -q --junitxml=pytest-results.xml
+
+      - name: Publish test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: pytest-results.xml
+          comment_mode: ${{ github.event_name == 'pull_request' && 'always' || 'off' }}
