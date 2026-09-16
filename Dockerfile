@@ -27,6 +27,8 @@ COPY alembic.ini ./
 COPY alembic ./alembic
 COPY pyproject.toml ./
 
+RUN mkdir -p /app/uploads && chown -R appuser:appuser /app
+
 ENV PATH="/opt/venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1

@@ -29,5 +29,9 @@ class Settings(BaseSettings):
     # Set explicitly to override that inference regardless of environment.
     arkesel_sandbox: bool | None = None
 
+    storage_provider: str = "local"  # "local" for now; e.g. "s3" later
+    local_storage_dir: str = "uploads"
+    public_base_url: str = "http://localhost:8000"
+
 
 settings = Settings()
