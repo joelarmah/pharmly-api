@@ -49,16 +49,17 @@ class Pharmacy(Base):
         return self.name
 
 
-class PharmacyPrice(Base):
-    """The local cache pricing is actually read from -- never a live
-    partner call. `source`/`synced_at` track provenance and freshness;
-    `scripts/seed_pricing_data.py` (see there) is still the only populated
-    source today ("seed"), alongside hand-edits via the admin panel
-    ("manual"). "partner_api" is reserved for a real integration -- PRD
-    §9 open question #4.
+class PharmacyProduct(Base):
+    """A pharmacy's listing of a catalog medication -- price, stock, and
+    provenance. The local cache pricing is actually read from -- never a
+    live partner call. `source`/`synced_at` track provenance and
+    freshness; `scripts/seed_pricing_data.py` (see there) is still the
+    only populated source today ("seed"), alongside hand-edits via the
+    admin panel ("manual"). "partner_api" is reserved for a real
+    integration -- PRD §9 open question #4.
     """
 
-    __tablename__ = "pharmacy_prices"
+    __tablename__ = "pharmacy_products"
 
     pharmacy_id: Mapped[str] = mapped_column(
         ForeignKey("pharmacies.id"), primary_key=True, index=True

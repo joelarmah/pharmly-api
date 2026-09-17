@@ -46,7 +46,7 @@ cp .env.example .env   # point DATABASE_URL at your own Postgres
 
 **Seeding pricing data:**
 
-`POST /orders/pricing` needs `medication_catalog`, `pharmacies`, and `pharmacy_prices` populated. Run once per environment (idempotent — safe to re-run):
+`POST /orders/pricing` needs `medication_catalog`, `pharmacies`, and `pharmacy_products` populated. Run once per environment (idempotent — safe to re-run):
 
 ```
 docker compose exec api python -m scripts.seed_pricing_data
@@ -58,7 +58,7 @@ This loads the real 549-entry Ghana NHIS medication list plus a handful of seede
 
 **Admin panel:**
 
-`/admin` (e.g. `http://localhost:8000/admin`) is a browsable admin UI (via [sqladmin](https://github.com/aminalaee/sqladmin)) for viewing and editing pharmacy/medication data. Pharmacies, the medication catalog, and pharmacy prices are fully editable; Users, Prescriptions, and Admin Accounts are read-only (support/debugging visibility only — PIN hashes and password hashes are never shown, and export is disabled for User data since it's PII).
+`/admin` (e.g. `http://localhost:8000/admin`) is a browsable admin UI (via [sqladmin](https://github.com/aminalaee/sqladmin)) for viewing and editing pharmacy/medication data. Pharmacies, the medication catalog, and pharmacy products are fully editable; Users, Prescriptions, and Admin Accounts are read-only (support/debugging visibility only — PIN hashes and password hashes are never shown, and export is disabled for User data since it's PII).
 
 Login is per-person, not a shared password — there's no self-signup, so create the first account via the CLI:
 
