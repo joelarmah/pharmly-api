@@ -1,15 +1,11 @@
-import secrets
 from datetime import datetime
 
 from sqlalchemy import Boolean, DateTime, String
 from sqlalchemy.orm import Mapped, mapped_column
 
+from app.core.ids import generate_id
 from app.core.time import utcnow
 from app.db.base import Base
-
-
-def _generate_admin_user_id() -> str:
-    return f"adm_{secrets.token_hex(12)}"
 
 
 class AdminUser(Base):
@@ -21,7 +17,7 @@ class AdminUser(Base):
 
     __tablename__ = "admin_users"
 
-    id: Mapped[str] = mapped_column(String, primary_key=True, default=_generate_admin_user_id)
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
     username: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(String, nullable=False)
     # Stored for future differentiated permissions; every account is a

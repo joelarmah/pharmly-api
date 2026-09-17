@@ -1,15 +1,11 @@
-import secrets
 from datetime import datetime
 
 from sqlalchemy import DateTime, Float, ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.schema import UniqueConstraint
 
+from app.core.ids import generate_id
 from app.db.base import Base
-
-
-def _generate_catalog_id() -> str:
-    return f"cat_{secrets.token_hex(8)}"
 
 
 class MedicationCatalog(Base):
@@ -22,7 +18,7 @@ class MedicationCatalog(Base):
         UniqueConstraint("name", "dosage", "unit", name="uq_medication_catalog_name_dosage_unit"),
     )
 
-    id: Mapped[str] = mapped_column(String, primary_key=True, default=_generate_catalog_id)
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
     name: Mapped[str] = mapped_column(String, index=True, nullable=False)
     dosage: Mapped[str] = mapped_column(String, nullable=False)
     unit: Mapped[str] = mapped_column(String, nullable=False)
