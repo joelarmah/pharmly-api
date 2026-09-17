@@ -3,7 +3,7 @@ import json
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyPrice
+from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyProduct
 from tests.conftest import FakeSmsSender
 from tests.helpers import PHONE, signup
 
@@ -72,7 +72,7 @@ async def _add_price(
     db_session: AsyncSession, pharmacy_id: str, catalog_id: str, unit_price: float
 ) -> None:
     db_session.add(
-        PharmacyPrice(pharmacy_id=pharmacy_id, catalog_id=catalog_id, unit_price=unit_price)
+        PharmacyProduct(pharmacy_id=pharmacy_id, catalog_id=catalog_id, unit_price=unit_price)
     )
     await db_session.commit()
 

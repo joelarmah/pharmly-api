@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.core.security import verify_password
 from app.core.time import utcnow
 from app.models.admin_user import AdminUser
-from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyPrice
+from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyProduct
 from app.models.prescription import Medication, Prescription
 from app.models.user import User
 
@@ -91,26 +91,26 @@ class MedicationCatalogAdmin(ModelView, model=MedicationCatalog):
     column_searchable_list = [MedicationCatalog.name]
 
 
-class PharmacyPriceAdmin(ModelView, model=PharmacyPrice):
-    name = "Price"
-    name_plural = "Pharmacy Prices"
+class PharmacyProductAdmin(ModelView, model=PharmacyProduct):
+    name = "Product"
+    name_plural = "Pharmacy Products"
     icon = "fa-solid fa-tag"
     column_list = [
-        PharmacyPrice.pharmacy,
-        PharmacyPrice.catalog,
-        PharmacyPrice.unit_price,
-        PharmacyPrice.stock_quantity,
-        PharmacyPrice.source,
-        PharmacyPrice.synced_at,
+        PharmacyProduct.pharmacy,
+        PharmacyProduct.catalog,
+        PharmacyProduct.unit_price,
+        PharmacyProduct.stock_quantity,
+        PharmacyProduct.source,
+        PharmacyProduct.synced_at,
     ]
     # source/synced_at are excluded here (unlike column_list, which shows
     # them for visibility) since on_model_change always overwrites them --
     # showing editable fields that silently get discarded would be misleading.
     form_columns = [
-        PharmacyPrice.pharmacy,
-        PharmacyPrice.catalog,
-        PharmacyPrice.unit_price,
-        PharmacyPrice.stock_quantity,
+        PharmacyProduct.pharmacy,
+        PharmacyProduct.catalog,
+        PharmacyProduct.unit_price,
+        PharmacyProduct.stock_quantity,
     ]
     # 508 catalog entries is too many for a plain <select>; AJAX search by
     # name (and dosage, to tell strengths of the same drug apart) instead.
@@ -120,7 +120,7 @@ class PharmacyPriceAdmin(ModelView, model=PharmacyPrice):
     }
 
     async def on_model_change(
-        self, data: dict, model: PharmacyPrice, is_created: bool, request: Request
+        self, data: dict, model: PharmacyProduct, is_created: bool, request: Request
     ) -> None:
         # A hand-edit through this panel *is* the manual-entry pathway --
         # stamp provenance so it's never mistaken for stale seed/partner data.
@@ -221,7 +221,7 @@ def setup_admin(app: Starlette, engine: AsyncEngine) -> Admin:
     for view in (
         PharmacyAdmin,
         MedicationCatalogAdmin,
-        PharmacyPriceAdmin,
+        PharmacyProductAdmin,
         UserAdmin,
         PrescriptionAdmin,
         MedicationLineAdmin,

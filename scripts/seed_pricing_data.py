@@ -1,6 +1,6 @@
-"""Seeds medication_catalog, pharmacies, and pharmacy_prices.
+"""Seeds medication_catalog, pharmacies, and pharmacy_products.
 
-pharmacy_prices are entirely synthetic (a deterministic price per
+pharmacy_products are entirely synthetic (a deterministic price per
 pharmacy/catalog-entry pair) -- there is no real partner pricing data yet
 (PRD §9 open question #4). This exists purely so v1 pricing has something
 real to compute against; replace with a real import once partner data
@@ -21,7 +21,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import AsyncSessionLocal
-from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyPrice
+from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyProduct
 
 SEED_DATA_DIR = Path(__file__).resolve().parent.parent / "app" / "seed_data"
 
@@ -103,7 +103,7 @@ async def _seed_prices(
 ) -> None:
     existing = {
         (p.pharmacy_id, p.catalog_id)
-        for p in (await db.execute(select(PharmacyPrice))).scalars().all()
+        for p in (await db.execute(select(PharmacyProduct))).scalars().all()
     }
 
     added = 0
@@ -112,7 +112,7 @@ async def _seed_prices(
             if (pharmacy.id, entry.id) in existing:
                 continue
             db.add(
-                PharmacyPrice(
+                PharmacyProduct(
                     pharmacy_id=pharmacy.id,
                     catalog_id=entry.id,
                     unit_price=_synthetic_unit_price(pharmacy.id, entry),
@@ -122,7 +122,7 @@ async def _seed_prices(
             added += 1
 
     await db.commit()
-    print(f"pharmacy_prices: {added} added, {len(existing)} already present")
+    print(f"pharmacy_products: {added} added, {len(existing)} already present")
 
 
 async def main() -> None:

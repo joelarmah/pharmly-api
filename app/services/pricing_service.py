@@ -5,7 +5,7 @@ from sqlalchemy.orm import selectinload
 
 from app.core.exceptions import ApiError
 from app.core.geo import estimate_eta_minutes, haversine_km
-from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyPrice
+from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyProduct
 from app.models.prescription import Medication, Prescription
 from app.schemas.pricing import MedicationLineOfferOut, MedicationPricingLineOut, PharmacyOfferOut
 
@@ -70,7 +70,7 @@ async def price_bundle(
     prices = (
         (
             await db.execute(
-                select(PharmacyPrice).where(PharmacyPrice.catalog_id.in_(matched_catalog_ids))
+                select(PharmacyProduct).where(PharmacyProduct.catalog_id.in_(matched_catalog_ids))
             )
         )
         .scalars()
@@ -129,9 +129,9 @@ async def price_per_medication(
 
         if catalog is not None:
             result = await db.execute(
-                select(PharmacyPrice, Pharmacy)
-                .join(Pharmacy, Pharmacy.id == PharmacyPrice.pharmacy_id)
-                .where(PharmacyPrice.catalog_id == catalog.id)
+                select(PharmacyProduct, Pharmacy)
+                .join(Pharmacy, Pharmacy.id == PharmacyProduct.pharmacy_id)
+                .where(PharmacyProduct.catalog_id == catalog.id)
             )
             for price, pharmacy in result.all():
                 distance_km, eta_minutes = _distance_and_eta(latitude, longitude, pharmacy)
