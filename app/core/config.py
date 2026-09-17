@@ -33,10 +33,5 @@ class Settings(BaseSettings):
     local_storage_dir: str = "uploads"
     public_base_url: str = "http://localhost:8000"
 
-    # Cheap v1 credential for the /admin panel (see app/admin.py) -- same
-    # spirit as the PRD's X-Admin-Key suggestion for §5.6, adapted to a
-    # browser session login. Must be overridden outside of dev.
-    admin_password: str = "change-me-in-env"
-
 
 settings = Settings()

@@ -1,33 +1,67 @@
-import secrets
-
 from sqladmin import Admin, ModelView
 from sqladmin.authentication import AuthenticationBackend
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import Response
 
 from app.core.config import settings
+from app.core.security import verify_password
+from app.core.time import utcnow
+from app.models.admin_user import AdminUser
 from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyPrice
 from app.models.prescription import Medication, Prescription
 from app.models.user import User
+
+# Set by setup_admin() once the Admin instance exists. AdminAuth reads this
+# (rather than a module it owns itself) so that repointing
+# admin_instance.session_maker at a test database -- see tests/conftest.py --
+# also covers login/session checks, not just the ModelView CRUD routes.
+admin_instance: Admin | None = None
 
 
 class AdminAuth(AuthenticationBackend):
     async def login(self, request: Request) -> bool:
         form = await request.form()
+        username = form.get("username")
         password = form.get("password")
-        if isinstance(password, str) and secrets.compare_digest(password, settings.admin_password):
-            request.session.update({"admin_authenticated": True})
-            return True
-        return False
+        if not isinstance(username, str) or not isinstance(password, str) or admin_instance is None:
+            return False
+
+        async with admin_instance.session_maker() as session:
+            result = await session.execute(
+                select(AdminUser).where(
+                    AdminUser.username == username, AdminUser.is_active.is_(True)
+                )
+            )
+            admin_user = result.scalar_one_or_none()
+            if admin_user is None or not verify_password(password, admin_user.password_hash):
+                return False
+
+            admin_user_id = admin_user.id
+            admin_user.last_login_at = utcnow()
+            await session.commit()
+
+        request.session.update({"admin_user_id": admin_user_id})
+        return True
 
     async def logout(self, request: Request) -> bool:
         request.session.clear()
         return True
 
     async def authenticate(self, request: Request) -> Response | bool:
-        return bool(request.session.get("admin_authenticated"))
+        admin_user_id = request.session.get("admin_user_id")
+        if not admin_user_id or admin_instance is None:
+            return False
+
+        async with admin_instance.session_maker() as session:
+            result = await session.execute(
+                select(AdminUser).where(
+                    AdminUser.id == admin_user_id, AdminUser.is_active.is_(True)
+                )
+            )
+            return result.scalar_one_or_none() is not None
 
 
 class PharmacyAdmin(ModelView, model=Pharmacy):
@@ -125,7 +159,25 @@ class MedicationLineAdmin(ModelView, model=Medication):
     ]
 
 
-admin_instance: Admin | None = None
+class AdminUserAdmin(ModelView, model=AdminUser):
+    name = "Admin Account"
+    name_plural = "Admin Accounts"
+    icon = "fa-solid fa-user-shield"
+    can_create = False
+    can_edit = False
+    can_delete = False
+    # Managed via scripts/manage_admin_users.py -- this view is visibility
+    # only. password_hash is deliberately excluded, same reasoning as
+    # User.pin_hash.
+    column_list = [
+        AdminUser.id,
+        AdminUser.username,
+        AdminUser.role,
+        AdminUser.is_active,
+        AdminUser.created_at,
+        AdminUser.last_login_at,
+    ]
+    column_details_list = column_list
 
 
 def setup_admin(app: Starlette, engine: AsyncEngine) -> Admin:
@@ -149,6 +201,7 @@ def setup_admin(app: Starlette, engine: AsyncEngine) -> Admin:
         UserAdmin,
         PrescriptionAdmin,
         MedicationLineAdmin,
+        AdminUserAdmin,
     ):
         admin.add_view(view)
 
