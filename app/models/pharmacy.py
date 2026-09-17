@@ -1,10 +1,11 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, Float, ForeignKey, String
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.schema import UniqueConstraint
 
 from app.core.ids import generate_id
+from app.core.time import utcnow
 from app.db.base import Base
 
 
@@ -36,11 +37,19 @@ class Pharmacy(Base):
     latitude: Mapped[float] = mapped_column(Float, nullable=False)
     longitude: Mapped[float] = mapped_column(Float, nullable=False)
     rating: Mapped[float | None] = mapped_column(Float, nullable=True)
+    # How this pharmacy's prices get populated. "manual" (admin-panel entry)
+    # is the only implemented path today; "partner_api" is reserved for a
+    # real integration once one exists -- see PRD §5.3/§9.
+    inventory_source: Mapped[str] = mapped_column(String, nullable=False, default="manual")
 
 
 class PharmacyPrice(Base):
-    """Placeholder pricing (see scripts/seed_pricing_data.py) until a real
-    partner data source exists -- PRD §9 open question #4.
+    """The local cache pricing is actually read from -- never a live
+    partner call. `source`/`synced_at` track provenance and freshness;
+    `scripts/seed_pricing_data.py` (see there) is still the only populated
+    source today ("seed"), alongside hand-edits via the admin panel
+    ("manual"). "partner_api" is reserved for a real integration -- PRD
+    §9 open question #4.
     """
 
     __tablename__ = "pharmacy_prices"
@@ -52,3 +61,6 @@ class PharmacyPrice(Base):
         ForeignKey("medication_catalog.id"), primary_key=True, index=True
     )
     unit_price: Mapped[float] = mapped_column(Float, nullable=False)
+    stock_quantity: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    source: Mapped[str] = mapped_column(String, nullable=False, default="manual")
+    synced_at: Mapped[datetime] = mapped_column(DateTime(), default=utcnow, nullable=False)
