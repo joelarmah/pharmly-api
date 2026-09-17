@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import DateTime, Float, ForeignKey, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.schema import UniqueConstraint
 
 from app.core.ids import generate_id
@@ -27,6 +27,9 @@ class MedicationCatalog(Base):
     type: Mapped[str] = mapped_column(String, nullable=False)
     retired_at: Mapped[datetime | None] = mapped_column(DateTime(), nullable=True)
 
+    def __str__(self) -> str:
+        return f"{self.name} {self.dosage}{self.unit}"
+
 
 class Pharmacy(Base):
     __tablename__ = "pharmacies"
@@ -41,6 +44,9 @@ class Pharmacy(Base):
     # is the only implemented path today; "partner_api" is reserved for a
     # real integration once one exists -- see PRD §5.3/§9.
     inventory_source: Mapped[str] = mapped_column(String, nullable=False, default="manual")
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class PharmacyPrice(Base):
@@ -64,3 +70,11 @@ class PharmacyPrice(Base):
     stock_quantity: Mapped[int | None] = mapped_column(Integer, nullable=True)
     source: Mapped[str] = mapped_column(String, nullable=False, default="manual")
     synced_at: Mapped[datetime] = mapped_column(DateTime(), default=utcnow, nullable=False)
+
+    # Not used by pricing_service.py (which queries pharmacy_id/catalog_id
+    # directly) -- these exist so the admin panel can render a searchable
+    # pharmacy/medication picker instead of requiring raw ids, since
+    # pharmacy_id/catalog_id being primary-key columns means sqladmin
+    # excludes them from forms by default.
+    pharmacy: Mapped[Pharmacy] = relationship()
+    catalog: Mapped[MedicationCatalog] = relationship()
