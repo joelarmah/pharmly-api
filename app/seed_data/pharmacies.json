@@ -1,34 +1,29 @@
 [
   {
-    "id": "ph_1",
     "name": "Ernest Chemists - Spintex",
     "latitude": 5.6389,
     "longitude": -0.1426,
     "rating": 4.8
   },
   {
-    "id": "ph_2",
     "name": "Ernest Chemists - Osu",
     "latitude": 5.5560,
     "longitude": -0.1804,
     "rating": 4.6
   },
   {
-    "id": "ph_3",
     "name": "Palace Pharmacy - East Legon",
     "latitude": 5.6500,
     "longitude": -0.1500,
     "rating": 4.5
   },
   {
-    "id": "ph_4",
     "name": "Recemed Pharmacy - Adenta",
     "latitude": 5.7080,
     "longitude": -0.1660,
     "rating": 4.3
   },
   {
-    "id": "ph_5",
     "name": "Pharmacity - Airport Residential",
     "latitude": 5.6050,
     "longitude": -0.1750,

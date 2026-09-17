@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.core.security import verify_password
 from app.core.time import utcnow
 from app.models.admin_user import AdminUser
-from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyPrice
+from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyProduct
 from app.models.prescription import Medication, Prescription
 from app.models.user import User
 
@@ -69,7 +69,6 @@ class PharmacyAdmin(ModelView, model=Pharmacy):
     name_plural = "Pharmacies"
     icon = "fa-solid fa-store"
     column_list = [
-        Pharmacy.id,
         Pharmacy.name,
         Pharmacy.latitude,
         Pharmacy.longitude,
@@ -82,7 +81,6 @@ class MedicationCatalogAdmin(ModelView, model=MedicationCatalog):
     name_plural = "Medication Catalog"
     icon = "fa-solid fa-pills"
     column_list = [
-        MedicationCatalog.id,
         MedicationCatalog.name,
         MedicationCatalog.dosage,
         MedicationCatalog.unit,
@@ -93,11 +91,41 @@ class MedicationCatalogAdmin(ModelView, model=MedicationCatalog):
     column_searchable_list = [MedicationCatalog.name]
 
 
-class PharmacyPriceAdmin(ModelView, model=PharmacyPrice):
-    name = "Price"
-    name_plural = "Pharmacy Prices"
+class PharmacyProductAdmin(ModelView, model=PharmacyProduct):
+    name = "Product"
+    name_plural = "Pharmacy Products"
     icon = "fa-solid fa-tag"
-    column_list = [PharmacyPrice.pharmacy_id, PharmacyPrice.catalog_id, PharmacyPrice.unit_price]
+    column_list = [
+        PharmacyProduct.pharmacy,
+        PharmacyProduct.catalog,
+        PharmacyProduct.unit_price,
+        PharmacyProduct.stock_quantity,
+        PharmacyProduct.source,
+        PharmacyProduct.synced_at,
+    ]
+    # source/synced_at are excluded here (unlike column_list, which shows
+    # them for visibility) since on_model_change always overwrites them --
+    # showing editable fields that silently get discarded would be misleading.
+    form_columns = [
+        PharmacyProduct.pharmacy,
+        PharmacyProduct.catalog,
+        PharmacyProduct.unit_price,
+        PharmacyProduct.stock_quantity,
+    ]
+    # 508 catalog entries is too many for a plain <select>; AJAX search by
+    # name (and dosage, to tell strengths of the same drug apart) instead.
+    form_ajax_refs = {
+        "pharmacy": {"fields": ("name",)},
+        "catalog": {"fields": ("name", "dosage")},
+    }
+
+    async def on_model_change(
+        self, data: dict, model: PharmacyProduct, is_created: bool, request: Request
+    ) -> None:
+        # A hand-edit through this panel *is* the manual-entry pathway --
+        # stamp provenance so it's never mistaken for stale seed/partner data.
+        data["source"] = "manual"
+        data["synced_at"] = utcnow()
 
 
 class UserAdmin(ModelView, model=User):
@@ -112,7 +140,6 @@ class UserAdmin(ModelView, model=User):
     # 6-digit PIN is still low-entropy enough that displaying it anywhere
     # is a real leak, not a tidiness concern.
     column_list = [
-        User.id,
         User.phone_number,
         User.full_name,
         User.email,
@@ -122,7 +149,7 @@ class UserAdmin(ModelView, model=User):
         User.pin_failed_attempts,
         User.pin_locked_until,
     ]
-    column_details_list = column_list
+    column_details_list = [User.id, *column_list]
 
 
 class PrescriptionAdmin(ModelView, model=Prescription):
@@ -133,7 +160,6 @@ class PrescriptionAdmin(ModelView, model=Prescription):
     can_edit = False
     can_delete = False
     column_list = [
-        Prescription.id,
         Prescription.user_id,
         Prescription.status,
         Prescription.image_url,
@@ -149,7 +175,6 @@ class MedicationLineAdmin(ModelView, model=Medication):
     can_edit = False
     can_delete = False
     column_list = [
-        Medication.id,
         Medication.prescription_id,
         Medication.name,
         Medication.dosage,
@@ -170,14 +195,13 @@ class AdminUserAdmin(ModelView, model=AdminUser):
     # only. password_hash is deliberately excluded, same reasoning as
     # User.pin_hash.
     column_list = [
-        AdminUser.id,
         AdminUser.username,
         AdminUser.role,
         AdminUser.is_active,
         AdminUser.created_at,
         AdminUser.last_login_at,
     ]
-    column_details_list = column_list
+    column_details_list = [AdminUser.id, *column_list]
 
 
 def setup_admin(app: Starlette, engine: AsyncEngine) -> Admin:
@@ -197,7 +221,7 @@ def setup_admin(app: Starlette, engine: AsyncEngine) -> Admin:
     for view in (
         PharmacyAdmin,
         MedicationCatalogAdmin,
-        PharmacyPriceAdmin,
+        PharmacyProductAdmin,
         UserAdmin,
         PrescriptionAdmin,
         MedicationLineAdmin,

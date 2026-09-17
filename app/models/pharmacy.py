@@ -1,15 +1,12 @@
-import secrets
 from datetime import datetime
 
-from sqlalchemy import DateTime, Float, ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.schema import UniqueConstraint
 
+from app.core.ids import generate_id
+from app.core.time import utcnow
 from app.db.base import Base
-
-
-def _generate_catalog_id() -> str:
-    return f"cat_{secrets.token_hex(8)}"
 
 
 class MedicationCatalog(Base):
@@ -22,7 +19,7 @@ class MedicationCatalog(Base):
         UniqueConstraint("name", "dosage", "unit", name="uq_medication_catalog_name_dosage_unit"),
     )
 
-    id: Mapped[str] = mapped_column(String, primary_key=True, default=_generate_catalog_id)
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
     name: Mapped[str] = mapped_column(String, index=True, nullable=False)
     dosage: Mapped[str] = mapped_column(String, nullable=False)
     unit: Mapped[str] = mapped_column(String, nullable=False)
@@ -30,23 +27,39 @@ class MedicationCatalog(Base):
     type: Mapped[str] = mapped_column(String, nullable=False)
     retired_at: Mapped[datetime | None] = mapped_column(DateTime(), nullable=True)
 
+    def __str__(self) -> str:
+        return f"{self.name} {self.dosage}{self.unit}"
+
 
 class Pharmacy(Base):
     __tablename__ = "pharmacies"
+    __table_args__ = (UniqueConstraint("name", name="uq_pharmacies_name"),)
 
-    id: Mapped[str] = mapped_column(String, primary_key=True)
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
     name: Mapped[str] = mapped_column(String, nullable=False)
     latitude: Mapped[float] = mapped_column(Float, nullable=False)
     longitude: Mapped[float] = mapped_column(Float, nullable=False)
     rating: Mapped[float | None] = mapped_column(Float, nullable=True)
+    # How this pharmacy's prices get populated. "manual" (admin-panel entry)
+    # is the only implemented path today; "partner_api" is reserved for a
+    # real integration once one exists -- see PRD §5.3/§9.
+    inventory_source: Mapped[str] = mapped_column(String, nullable=False, default="manual")
+
+    def __str__(self) -> str:
+        return self.name
 
 
-class PharmacyPrice(Base):
-    """Placeholder pricing (see scripts/seed_pricing_data.py) until a real
-    partner data source exists -- PRD §9 open question #4.
+class PharmacyProduct(Base):
+    """A pharmacy's listing of a catalog medication -- price, stock, and
+    provenance. The local cache pricing is actually read from -- never a
+    live partner call. `source`/`synced_at` track provenance and
+    freshness; `scripts/seed_pricing_data.py` (see there) is still the
+    only populated source today ("seed"), alongside hand-edits via the
+    admin panel ("manual"). "partner_api" is reserved for a real
+    integration -- PRD §9 open question #4.
     """
 
-    __tablename__ = "pharmacy_prices"
+    __tablename__ = "pharmacy_products"
 
     pharmacy_id: Mapped[str] = mapped_column(
         ForeignKey("pharmacies.id"), primary_key=True, index=True
@@ -55,3 +68,14 @@ class PharmacyPrice(Base):
         ForeignKey("medication_catalog.id"), primary_key=True, index=True
     )
     unit_price: Mapped[float] = mapped_column(Float, nullable=False)
+    stock_quantity: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    source: Mapped[str] = mapped_column(String, nullable=False, default="manual")
+    synced_at: Mapped[datetime] = mapped_column(DateTime(), default=utcnow, nullable=False)
+
+    # Not used by pricing_service.py (which queries pharmacy_id/catalog_id
+    # directly) -- these exist so the admin panel can render a searchable
+    # pharmacy/medication picker instead of requiring raw ids, since
+    # pharmacy_id/catalog_id being primary-key columns means sqladmin
+    # excludes them from forms by default.
+    pharmacy: Mapped[Pharmacy] = relationship()
+    catalog: Mapped[MedicationCatalog] = relationship()

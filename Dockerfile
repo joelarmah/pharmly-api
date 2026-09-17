@@ -26,6 +26,7 @@ COPY app ./app
 COPY alembic.ini ./
 COPY alembic ./alembic
 COPY scripts ./scripts
+COPY templates ./templates
 COPY pyproject.toml ./
 
 RUN mkdir -p /app/uploads && chown -R appuser:appuser /app

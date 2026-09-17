@@ -64,6 +64,10 @@ Return this shape (a `message` string key) on every 4xx/5xx. FastAPI's default `
 - `POST /auth/login`, `POST /auth/pin/verify`, `POST /auth/pin/change`: lock out / backoff after N consecutive wrong-PIN attempts per account (the client already has UX for a PIN-mismatch error — see §5.1 — so a 429/423 here should map to a clear `message`).
 - OTP codes: 6 digits, single-use, expire in ~5 minutes.
 
+### 4.6 Identifiers
+
+All server-generated primary key ids (`users.id`, `prescriptions.id`, `medications.id`, `pharmacies.id`, `medication_catalog.id`, `admin_users.id`, etc.) are **UUIDv7** strings, e.g. `"0191b1f0-7e2a-7c3b-9b1a-2f6a4e8c1d3f"`. UUIDv7 embeds a millisecond timestamp in its high bits, so ids sort chronologically by creation time (unlike UUIDv4) while staying globally unique and unguessable enough for a public-facing id. Ids in earlier example payloads throughout this document (`"usr_..."`, `"PR123456"`, `"ph_1"`, `"cat_xxx"`) are illustrative placeholders only — the client treats ids as opaque strings and does not parse or validate their format.
+
 ---
 
 ## 5. Domains & endpoints
@@ -249,6 +253,12 @@ This is the biggest *new* domain — there is no existing pharmacy/inventory mod
 
 `order_type`: `singleLine` = one combined quote across all medications from a single pharmacy; `multiLine` = (per the mock's comment) a separate quote per medication — if `multiLine` support is deferred, at minimum don't error on it; treat it the same as `singleLine` until real multi-pharmacy splitting is built, and flag this to the product owner.
 
+**Confirmed architecture (resolves part of §9 open question #4):** `pharmacy_products` (a pharmacy's listing of a catalog medication — price, stock, provenance; named "products" rather than "prices" since each row is a real inventory listing, not just a number) is always a **local cache** — `POST /orders/pricing` reads from our own database, never from a partner pharmacy live, so a burst of pricing requests never hits a partner's servers directly. Pharmacies onboard one of two ways, tracked on `Pharmacy.inventory_source` and per-row on `PharmacyProduct.source`:
+- **`manual`** — an ops person enters/corrects prices directly via the admin panel (`/admin`, `app/admin.py`). This is the only *implemented* onboarding path today.
+- **`partner_api`** — reserved for when a real partner pharmacy API/contract exists; a periodic sync would pull their inventory and upsert `pharmacy_products` rows with `source="partner_api"` and `synced_at` set to when that pull happened. Not implemented — there is no real partner integration to build against yet (see §9).
+
+`PharmacyProduct.stock_quantity` exists to eventually carry real per-item stock counts once a real source (manual or partner) populates it; today it's unused by pricing logic — a row's mere existence still means "in stock," as before.
+
 ---
 
 ### 5.4 Orders
@@ -356,7 +366,7 @@ The client **polls this in a loop** (every ~1.5s) showing a "Confirming Payment"
 
 **Open question for the product owner (add to §9):** *who* manages this catalog, and how are they authenticated? None of this app's existing auth (customer phone+OTP+PIN) is appropriate for catalog management. Cheapest v1: gate the management endpoints behind a static internal API key (`X-Admin-Key` header) for an ops person running a CLI/import script — upgrade to real staff accounts with a `role: admin` claim if/when a proper internal tool gets built. Do **not** expose the management endpoints to the customer-facing JWT scheme.
 
-**Why an owned table instead of a third-party drug-database API:** considered and rejected for now. Global drug databases (RxNorm, openFDA, DrugBank) are US/international-centric and won't line up with what's actually registered with Ghana FDA or covered by NHIS — the current data *is* Ghana's NHIS medicines list, which is what determines what's realistically prescribed/dispensed/reimbursed locally. Pricing/availability is pharmacy-specific anyway (`pharmacy_prices`, tied to real partner pharmacies) — a drug-identity API alone wouldn't provide that. Own the table; use `POST /medications/catalog/import` as the integration seam if a real Ghana-specific formulary feed (an FDA Ghana registry, an NHIS API, or a partner pharmacy's product-master feed) ever becomes available.
+**Why an owned table instead of a third-party drug-database API:** considered and rejected for now. Global drug databases (RxNorm, openFDA, DrugBank) are US/international-centric and won't line up with what's actually registered with Ghana FDA or covered by NHIS — the current data *is* Ghana's NHIS medicines list, which is what determines what's realistically prescribed/dispensed/reimbursed locally. Pricing/availability is pharmacy-specific anyway (`pharmacy_products`, tied to real partner pharmacies) — a drug-identity API alone wouldn't provide that. Own the table; use `POST /medications/catalog/import` as the integration seam if a real Ghana-specific formulary feed (an FDA Ghana registry, an NHIS API, or a partner pharmacy's product-master feed) ever becomes available.
 
 ---
 
@@ -370,7 +380,7 @@ The client **polls this in a loop** (every ~1.5s) showing a "Confirming Payment"
 | `medications` | id, prescription_id (FK), name, dosage, dosage_unit, quantity, quantity_unit, type, dose_amount, duration_days, reminder_enabled, notification_days (JSON), frequency, times (JSON), start_from, end_on |
 | `pharmacies` | id, name, location (lat/lng), rating |
 | `medication_catalog` | id, name, dosage, unit, form, type, retired_at (soft-delete) |
-| `pharmacy_prices` | pharmacy_id (FK), catalog_id (FK to `medication_catalog`), unit_price |
+| `pharmacy_products` | pharmacy_id (FK), catalog_id (FK to `medication_catalog`), unit_price, stock_quantity, source, synced_at |
 | `orders` | id, user_id, prescription_id, pharmacy_id, order_type, payment_type, payment_reference, progress, total, placed_at |
 | `payment_transactions` | reference, order_id (nullable until order placed), amount, status, paystack_raw_response (JSON), created_at |
 
@@ -394,9 +404,16 @@ The client **polls this in a loop** (every ~1.5s) showing a "Confirming Payment"
 1. **Who/what calls `PATCH /orders/{id}/status`?** An ops dashboard? A courier-facing app? Direct pharmacy-partner API integration? This backend should expose the endpoint; the *caller* is a separate build.
 2. **SMS provider** for OTP delivery — Twilio, Africa's Talking, or another Ghana-focused provider? Needs an account + credentials before `POST /auth/otp/request` can go live.
 3. **Paystack account** — test and live secret/public keys, and whether Mobile Money channels are enabled on the account (Ghana MTN/Vodafone/AirtelTigo).
-4. **Pharmacy partner data** — is there a real source (partner API, spreadsheet, manual ops entry) for pharmacy inventory/pricing, or does `POST /orders/pricing` need to launch with a manually-curated price list?
+4. **Pharmacy partner data** — partially decided (see §5.3): pricing always reads from our own `pharmacy_products` cache, populated either by manual ops entry (implemented, via the admin panel) or a future partner API sync (not implemented — no real partner contract/credentials exist yet, same situation Arkesel was in before real docs/keys were provided). Still open:
+   - No real partner pharmacy API contract exists to build `source="partner_api"` sync against — needed before that path can be implemented at all.
+   - No scheduler/background-job infrastructure exists in this codebase (confirmed: no Celery/APScheduler/cron anywhere) — a periodic partner sync needs *some* execution mechanism once a real partner exists; an admin-triggered endpoint (matching the `X-Admin-Key` precedent in §5.6) is the cheapest v1 option, a real scheduler the eventual one.
+   - `POST /orders/pricing`'s "scan nearby pharmacies" step is currently a naive load-all-pharmacies-then-filter-in-Python (fine at today's scale of a handful of seeded pharmacies); a real geospatial query (PostGIS `ST_DWithin` or similar) will be needed once onboarded-pharmacy volume makes that too slow — not built now to avoid premature optimization.
 5. **`date_label` formatting** (§5.4) — server-formatted display string vs. raw timestamp + client-side formatting. Recommend moving to raw timestamps if the mobile team can pick this work up; otherwise this backend needs to replicate the exact display strings currently hardcoded client-side.
 6. **Who manages the medicine catalog (§5.6)**, and how are they authenticated? An ops person via CLI/import script (cheapest, static API key) vs. a real internal admin tool with staff accounts. Also: is there a periodic official source (Ghana FDA/NHIS) to re-import from, or is this manual entry/correction only for now?
+7. **Account deletion** — there is currently no way for a `User` to delete/close their account: no endpoint in this PRD, and no `deleted_at`/`is_active` field on the `users` table to support one. Needs a product-owner decision before it's built:
+   - **Soft delete** (a `deleted_at` timestamp, filtered out of auth/lookups) preserves referential integrity for rows that reference `users.id` (`prescriptions`, `refresh_tokens`, orders once §5.4 exists) and any order/payment history, but requires excluding soft-deleted rows everywhere `User` is queried and deciding whether a re-registration with the same `phone_number` is then allowed.
+   - **Hard delete** is simpler but needs `ON DELETE CASCADE`/explicit cleanup across every FK to `users.id`, and permanently loses order/prescription history that might be needed for support or legal/tax record-keeping.
+   - Also relevant: is there a legal requirement (e.g. a "right to be forgotten"-style data protection obligation in Ghana) driving this, which would push toward true erasure of PII rather than a retained-but-hidden soft delete?
 
 ---
 
