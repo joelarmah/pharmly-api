@@ -96,13 +96,28 @@ class PharmacyPriceAdmin(ModelView, model=PharmacyPrice):
     name_plural = "Pharmacy Prices"
     icon = "fa-solid fa-tag"
     column_list = [
-        PharmacyPrice.pharmacy_id,
-        PharmacyPrice.catalog_id,
+        PharmacyPrice.pharmacy,
+        PharmacyPrice.catalog,
         PharmacyPrice.unit_price,
         PharmacyPrice.stock_quantity,
         PharmacyPrice.source,
         PharmacyPrice.synced_at,
     ]
+    # source/synced_at are excluded here (unlike column_list, which shows
+    # them for visibility) since on_model_change always overwrites them --
+    # showing editable fields that silently get discarded would be misleading.
+    form_columns = [
+        PharmacyPrice.pharmacy,
+        PharmacyPrice.catalog,
+        PharmacyPrice.unit_price,
+        PharmacyPrice.stock_quantity,
+    ]
+    # 508 catalog entries is too many for a plain <select>; AJAX search by
+    # name (and dosage, to tell strengths of the same drug apart) instead.
+    form_ajax_refs = {
+        "pharmacy": {"fields": ("name",)},
+        "catalog": {"fields": ("name", "dosage")},
+    }
 
     async def on_model_change(
         self, data: dict, model: PharmacyPrice, is_created: bool, request: Request
