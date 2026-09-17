@@ -55,3 +55,7 @@ docker compose exec api python -m scripts.seed_pricing_data
 ```
 
 This loads the real 549-entry Ghana NHIS medication list plus a handful of seeded pharmacies, and generates **synthetic** per-pharmacy prices — there's no real partner pricing data yet. See `scripts/seed_pricing_data.py` for details.
+
+**Admin panel:**
+
+`/admin` (e.g. `http://localhost:8000/admin`) is a browsable admin UI (via [sqladmin](https://github.com/aminalaee/sqladmin)) for viewing and editing pharmacy/medication data — log in with the `ADMIN_PASSWORD` from your `.env`. Pharmacies, the medication catalog, and pharmacy prices are fully editable; Users and Prescriptions are read-only (support/debugging visibility only — PIN hashes are never shown, and export is disabled for User data since it's PII). This is a cheap v1 credential, same spirit as the `X-Admin-Key` the PRD suggests for future catalog-management endpoints (§5.6) — **must** be overridden outside of dev.
