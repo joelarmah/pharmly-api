@@ -3,9 +3,11 @@ import logging
 from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
+from app.admin import setup_admin
 from app.api.v1 import auth, me, orders, prescriptions
 from app.core.config import settings
 from app.core.exceptions import install_exception_handlers
+from app.db.session import engine
 
 # Minimal baseline so INFO-level app logs (e.g. the console SMS sender)
 # aren't silently dropped -- root logger otherwise defaults to WARNING.
@@ -24,6 +26,8 @@ app.include_router(orders.router)
 app.mount(
     "/uploads", StaticFiles(directory=settings.local_storage_dir, check_dir=False), name="uploads"
 )
+
+setup_admin(app, engine)
 
 
 @app.get("/health")

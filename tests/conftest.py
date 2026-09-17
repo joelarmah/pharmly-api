@@ -5,6 +5,7 @@ from httpx import ASGITransport, AsyncClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import StaticPool
 
+import app.admin as admin_module
 from app.core.config import settings
 from app.db.base import Base
 from app.db.session import get_db
@@ -45,6 +46,13 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
         await conn.run_sync(Base.metadata.create_all)
 
     session_maker = async_sessionmaker(bind=engine, expire_on_commit=False)
+
+    # sqladmin's views hold their own DB session_maker (set once at
+    # admin.add_view() time), not routed through get_db -- repoint it at
+    # this test's engine so admin routes see the same data as everything
+    # else in the test.
+    if admin_module.admin_instance is not None:
+        admin_module.admin_instance.session_maker.configure(bind=engine)
 
     async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
         async with session_maker() as session:

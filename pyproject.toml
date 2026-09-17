@@ -16,6 +16,7 @@ dependencies = [
     "pyjwt>=2.9",
     "httpx>=0.27",
     "python-multipart>=0.0.12",
+    "sqladmin[auth]>=0.20",
 ]
 
 [project.optional-dependencies]
