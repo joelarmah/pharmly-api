@@ -69,7 +69,6 @@ class PharmacyAdmin(ModelView, model=Pharmacy):
     name_plural = "Pharmacies"
     icon = "fa-solid fa-store"
     column_list = [
-        Pharmacy.id,
         Pharmacy.name,
         Pharmacy.latitude,
         Pharmacy.longitude,
@@ -82,7 +81,6 @@ class MedicationCatalogAdmin(ModelView, model=MedicationCatalog):
     name_plural = "Medication Catalog"
     icon = "fa-solid fa-pills"
     column_list = [
-        MedicationCatalog.id,
         MedicationCatalog.name,
         MedicationCatalog.dosage,
         MedicationCatalog.unit,
@@ -112,7 +110,6 @@ class UserAdmin(ModelView, model=User):
     # 6-digit PIN is still low-entropy enough that displaying it anywhere
     # is a real leak, not a tidiness concern.
     column_list = [
-        User.id,
         User.phone_number,
         User.full_name,
         User.email,
@@ -122,7 +119,7 @@ class UserAdmin(ModelView, model=User):
         User.pin_failed_attempts,
         User.pin_locked_until,
     ]
-    column_details_list = column_list
+    column_details_list = [User.id, *column_list]
 
 
 class PrescriptionAdmin(ModelView, model=Prescription):
@@ -133,7 +130,6 @@ class PrescriptionAdmin(ModelView, model=Prescription):
     can_edit = False
     can_delete = False
     column_list = [
-        Prescription.id,
         Prescription.user_id,
         Prescription.status,
         Prescription.image_url,
@@ -149,7 +145,6 @@ class MedicationLineAdmin(ModelView, model=Medication):
     can_edit = False
     can_delete = False
     column_list = [
-        Medication.id,
         Medication.prescription_id,
         Medication.name,
         Medication.dosage,
@@ -170,14 +165,13 @@ class AdminUserAdmin(ModelView, model=AdminUser):
     # only. password_hash is deliberately excluded, same reasoning as
     # User.pin_hash.
     column_list = [
-        AdminUser.id,
         AdminUser.username,
         AdminUser.role,
         AdminUser.is_active,
         AdminUser.created_at,
         AdminUser.last_login_at,
     ]
-    column_details_list = column_list
+    column_details_list = [AdminUser.id, *column_list]
 
 
 def setup_admin(app: Starlette, engine: AsyncEngine) -> Admin:

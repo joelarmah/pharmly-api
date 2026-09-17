@@ -1,25 +1,17 @@
-import secrets
 from datetime import datetime
 
 from sqlalchemy import JSON, Boolean, DateTime, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.core.ids import generate_id
 from app.core.time import utcnow
 from app.db.base import Base
-
-
-def _generate_prescription_id() -> str:
-    return f"PR{secrets.token_hex(4).upper()}"
-
-
-def _generate_medication_id() -> str:
-    return f"med_{secrets.token_hex(8)}"
 
 
 class Prescription(Base):
     __tablename__ = "prescriptions"
 
-    id: Mapped[str] = mapped_column(String, primary_key=True, default=_generate_prescription_id)
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
     user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True, nullable=False)
     image_url: Mapped[str | None] = mapped_column(String, nullable=True)
     status: Mapped[str] = mapped_column(String, nullable=False, default="submitted")
@@ -35,7 +27,7 @@ class Prescription(Base):
 class Medication(Base):
     __tablename__ = "medications"
 
-    id: Mapped[str] = mapped_column(String, primary_key=True, default=_generate_medication_id)
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
     prescription_id: Mapped[str] = mapped_column(
         ForeignKey("prescriptions.id"), index=True, nullable=False
     )

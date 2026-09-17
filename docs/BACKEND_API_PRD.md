@@ -64,6 +64,10 @@ Return this shape (a `message` string key) on every 4xx/5xx. FastAPI's default `
 - `POST /auth/login`, `POST /auth/pin/verify`, `POST /auth/pin/change`: lock out / backoff after N consecutive wrong-PIN attempts per account (the client already has UX for a PIN-mismatch error — see §5.1 — so a 429/423 here should map to a clear `message`).
 - OTP codes: 6 digits, single-use, expire in ~5 minutes.
 
+### 4.6 Identifiers
+
+All server-generated primary key ids (`users.id`, `prescriptions.id`, `medications.id`, `pharmacies.id`, `medication_catalog.id`, `admin_users.id`, etc.) are **UUIDv7** strings, e.g. `"0191b1f0-7e2a-7c3b-9b1a-2f6a4e8c1d3f"`. UUIDv7 embeds a millisecond timestamp in its high bits, so ids sort chronologically by creation time (unlike UUIDv4) while staying globally unique and unguessable enough for a public-facing id. Ids in earlier example payloads throughout this document (`"usr_..."`, `"PR123456"`, `"ph_1"`, `"cat_xxx"`) are illustrative placeholders only — the client treats ids as opaque strings and does not parse or validate their format.
+
 ---
 
 ## 5. Domains & endpoints
