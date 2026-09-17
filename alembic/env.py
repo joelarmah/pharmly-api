@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 from app.core.config import settings
 from app.db.base import Base
-from app.models import otp, refresh_token, user  # noqa: F401 -- registers models on Base.metadata
+from app.models import otp, pharmacy, prescription, refresh_token, user  # noqa: F401
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.database_url)

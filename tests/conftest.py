@@ -9,6 +9,22 @@ from app.core.config import settings
 from app.db.base import Base
 from app.db.session import get_db
 from app.main import app
+from app.services import otp_service
+
+
+class FakeSmsSender:
+    def __init__(self) -> None:
+        self.sent: dict[str, str] = {}
+
+    async def send_otp(self, phone_number: str, code: str) -> None:
+        self.sent[phone_number] = code
+
+
+@pytest.fixture
+def fake_sms(monkeypatch: pytest.MonkeyPatch) -> FakeSmsSender:
+    sender = FakeSmsSender()
+    monkeypatch.setattr(otp_service, "get_sms_sender", lambda: sender)
+    return sender
 
 
 @pytest.fixture(autouse=True)
