@@ -29,8 +29,9 @@ class MedicationCatalog(Base):
 
 class Pharmacy(Base):
     __tablename__ = "pharmacies"
+    __table_args__ = (UniqueConstraint("name", name="uq_pharmacies_name"),)
 
-    id: Mapped[str] = mapped_column(String, primary_key=True)
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
     name: Mapped[str] = mapped_column(String, nullable=False)
     latitude: Mapped[float] = mapped_column(Float, nullable=False)
     longitude: Mapped[float] = mapped_column(Float, nullable=False)

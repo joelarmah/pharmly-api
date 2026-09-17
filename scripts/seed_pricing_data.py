@@ -75,25 +75,26 @@ async def _seed_catalog(db: AsyncSession) -> list[MedicationCatalog]:
 async def _seed_pharmacies(db: AsyncSession) -> list[Pharmacy]:
     entries = json.loads((SEED_DATA_DIR / "pharmacies.json").read_text())
 
-    existing_ids = {p.id for p in (await db.execute(select(Pharmacy))).scalars().all()}
+    existing = (await db.execute(select(Pharmacy))).scalars().all()
+    existing_names = {p.name for p in existing}
 
     added = 0
     for entry in entries:
-        if entry["id"] in existing_ids:
+        if entry["name"] in existing_names:
             continue
         db.add(
             Pharmacy(
-                id=entry["id"],
                 name=entry["name"],
                 latitude=entry["latitude"],
                 longitude=entry["longitude"],
                 rating=entry.get("rating"),
             )
         )
+        existing_names.add(entry["name"])
         added += 1
 
     await db.commit()
-    print(f"pharmacies: {added} added, {len(existing_ids)} already present")
+    print(f"pharmacies: {added} added, {len(existing)} already present")
     return (await db.execute(select(Pharmacy))).scalars().all()
 
 
