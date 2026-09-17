@@ -1,0 +1,3845 @@
+[
+  {
+    "name": "Acetazolamide",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Acetazolamide",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Acetylcysteine",
+    "dosage": "200",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Acetylsalicylic Acid",
+    "dosage": "300",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Acetylsalicylic Acid",
+    "dosage": "75",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Actinomycin D",
+    "dosage": "0.5",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Activated Charcoal",
+    "dosage": "50",
+    "unit": "g",
+    "form": "powder",
+    "type": "powder"
+  },
+  {
+    "name": "Acyclovir",
+    "dosage": "5",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Acyclovir Eye",
+    "dosage": "3",
+    "unit": "%",
+    "form": "ointment",
+    "type": "topical"
+  },
+  {
+    "name": "Acyclovir",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Acyclovir",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Acyclovir",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Adrenaline",
+    "dosage": "1",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Adrenaline",
+    "dosage": "1:10,000 Vial",
+    "unit": "",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Adriamycin",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Albendazole",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Albendazole",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Albendazole",
+    "dosage": "400",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Allopurinol",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Allopurinol",
+    "dosage": "300",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amino Acid",
+    "dosage": "10",
+    "unit": "%",
+    "form": "solution",
+    "type": "liquid"
+  },
+  {
+    "name": "Amino Acid",
+    "dosage": "20",
+    "unit": "%",
+    "form": "solution",
+    "type": "liquid"
+  },
+  {
+    "name": "Aminophylline",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Amiodarone",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amitriptyline",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amitriptyline",
+    "dosage": "25",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amitriptyline",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amlodipine",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amlodipine",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amodiaquine + Artesunate",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "granular",
+    "type": "powder"
+  },
+  {
+    "name": "Amodiaquine + Artesunate",
+    "dosage": "75",
+    "unit": "mg",
+    "form": "granular",
+    "type": "powder"
+  },
+  {
+    "name": "Amodiaquine + Artesunate",
+    "dosage": "135",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amodiaquine + Artesunate",
+    "dosage": "135",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amodiaquine + Artesunate",
+    "dosage": "270",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amodiaquine + Artesunate",
+    "dosage": "270",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amodiaquine + Artesunate",
+    "dosage": "67.5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amodiaquine + Artesunate",
+    "dosage": "67.5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amoxicillin + Clavulanic Acid",
+    "dosage": "1.2",
+    "unit": "g",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Amoxicillin + Clavulanic Acid",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Amoxicillin + Clavulanic Acid",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Amoxicillin + Clavulanic Acid",
+    "dosage": "400",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Amoxicillin + Clavulanic Acid",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amoxicillin + Clavulanic Acid",
+    "dosage": "875",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amoxicillin 250 mg, Dispersible",
+    "dosage": "Tablet",
+    "unit": "",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Amoxicillin",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Amoxicillin",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Amoxicillin",
+    "dosage": "125",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Ampicillin",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Anastrozole",
+    "dosage": "1",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Anti RH Immunoglobulin",
+    "dosage": "1500",
+    "unit": "iu",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Anti Tetanus",
+    "dosage": "1500",
+    "unit": "iu",
+    "form": "serum",
+    "type": "injection"
+  },
+  {
+    "name": "Aqueous",
+    "dosage": "BP 100 G",
+    "unit": "",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Artemether + Lumefantrine",
+    "dosage": "100",
+    "unit": "mL",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Artemether + Lumefantrine",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Artemether + Lumefantrine",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Artemether + Lumefantrine",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Artemether + Lumefantrine",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Artemether",
+    "dosage": "80",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Artermether + Lumefantrine Dispersible, (20 mg + 6 Tablets 120 mg)",
+    "dosage": "",
+    "unit": "",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Artesunate",
+    "dosage": "120",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Artesunate",
+    "dosage": "30",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Artesunate",
+    "dosage": "60",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Artesunate",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "suppository",
+    "type": "suppository"
+  },
+  {
+    "name": "Artesunate",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "suppository",
+    "type": "suppository"
+  },
+  {
+    "name": "Atenolol + Hydrochlorthiazide",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Atenolol + Hydrochlorthiazide",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Atenolol",
+    "dosage": "500",
+    "unit": "microgram",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Atenolol",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Atenolol",
+    "dosage": "25",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Atenolol",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Atorvastatin",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Atorvastatin",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Atropine Eye",
+    "dosage": "1",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Atropine",
+    "dosage": "0.6",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Azithromycin",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Azithromycin Oral",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Azithromycin Oral",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Badoe's",
+    "dosage": "1000",
+    "unit": "mL",
+    "form": "solution",
+    "type": "liquid"
+  },
+  {
+    "name": "Beclometasone dipropionate",
+    "dosage": "100 Inhaler microgram/metered dose (200 doses)",
+    "unit": "",
+    "form": "inhaler",
+    "type": "inhaler"
+  },
+  {
+    "name": "Beclometasone dipropionate",
+    "dosage": "200 Inhaler microgram/metered dose (200 doses)",
+    "unit": "",
+    "form": "inhaler",
+    "type": "inhaler"
+  },
+  {
+    "name": "Beclometasone dipropionate",
+    "dosage": "50 Inhaler microgram/metered dose (200 doses)",
+    "unit": "",
+    "form": "inhaler",
+    "type": "inhaler"
+  },
+  {
+    "name": "Bendroflumethiazide",
+    "dosage": "2.5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Benzatropine",
+    "dosage": "1",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Benzatropine",
+    "dosage": "2",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Benzoic Acid + Salicylic Acid",
+    "dosage": "6",
+    "unit": "%",
+    "form": "ointment",
+    "type": "topical"
+  },
+  {
+    "name": "Benzoyl Peroxide",
+    "dosage": "10",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Benzoyl Peroxide",
+    "dosage": "5",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Benzyl Benzoate",
+    "dosage": "25",
+    "unit": "%",
+    "form": "lotion",
+    "type": "topical"
+  },
+  {
+    "name": "Benzyl Benzoate",
+    "dosage": "25",
+    "unit": "%",
+    "form": "lotion",
+    "type": "topical"
+  },
+  {
+    "name": "Benzylpenicillin",
+    "dosage": "1 MU Vial",
+    "unit": "",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Benzylpenicillin",
+    "dosage": "5 MU Vial",
+    "unit": "",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Betamethasone Valerate",
+    "dosage": "0.1",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Betaxolol HCL Eye",
+    "dosage": "0.5",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Bisacodyl",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Bisoprolol",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Bisoprolol",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Bromocriptine",
+    "dosage": "2.5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Budesonide + Formoterol",
+    "dosage": "4.5",
+    "unit": "microgram",
+    "form": "inhaler",
+    "type": "inhaler"
+  },
+  {
+    "name": "Budesonide + Formoterol",
+    "dosage": "80",
+    "unit": "microgram",
+    "form": "inhaler",
+    "type": "inhaler"
+  },
+  {
+    "name": "Budesonide",
+    "dosage": "100",
+    "unit": "microgram",
+    "form": "dpi",
+    "type": "pills"
+  },
+  {
+    "name": "Budesonide",
+    "dosage": "200",
+    "unit": "microgram",
+    "form": "dpi",
+    "type": "pills"
+  },
+  {
+    "name": "Calamine",
+    "dosage": "15",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Calamine",
+    "dosage": "15",
+    "unit": "%",
+    "form": "lotion",
+    "type": "topical"
+  },
+  {
+    "name": "Calciferol",
+    "dosage": "10,000",
+    "unit": "units",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Calcium Gluconate",
+    "dosage": "100",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Calcium Carbonate",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Calcium with Vitamin D",
+    "dosage": "97",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Capecitabine",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Carbamazepine Sustained-Release",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Carbamazepine Sustained-Release",
+    "dosage": "400",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Carbamazepine",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Carbamazepine",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Carbimazole",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Carbimazole",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Carbocisteine Paediatric",
+    "dosage": "125",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Carbocisteine",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Carboplatin",
+    "dosage": "150",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Carboplatin",
+    "dosage": "450",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Carvedilol",
+    "dosage": "12.5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Carvedilol",
+    "dosage": "3.125",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Cefaclor",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Cefaclor",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Cefaclor",
+    "dosage": "125",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Cefaclor",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Cefotaxime",
+    "dosage": "1",
+    "unit": "g",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Cefotaxime",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Ceftriazone",
+    "dosage": "1",
+    "unit": "g",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Ceftriazone",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Cefuroxime",
+    "dosage": "1.5",
+    "unit": "g",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Cefuroxime",
+    "dosage": "750",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Cefuroxime",
+    "dosage": "125",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Cefuroxime",
+    "dosage": "125",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Cefuroxime",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Celecoxib",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Celecoxib",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Cetirizine",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Cetirizine",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Cetrimide",
+    "dosage": "200",
+    "unit": "mL",
+    "form": "solution",
+    "type": "liquid"
+  },
+  {
+    "name": "Chloramphenicol Ear",
+    "dosage": "5",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Chloramphenicol Eye",
+    "dosage": "0.5",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Chloramphenicol Eye",
+    "dosage": "1",
+    "unit": "%",
+    "form": "ointment",
+    "type": "topical"
+  },
+  {
+    "name": "Chloramphenicol",
+    "dosage": "1",
+    "unit": "g",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Chloramphenicol",
+    "dosage": "125",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Chlorhexidine",
+    "dosage": "1",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Chlorhexidine",
+    "dosage": "7.1",
+    "unit": "%",
+    "form": "gel",
+    "type": "topical"
+  },
+  {
+    "name": "Chlorhexidine",
+    "dosage": "0.12",
+    "unit": "%",
+    "form": "mouth wash",
+    "type": "liquid"
+  },
+  {
+    "name": "Chlorhexidine",
+    "dosage": "2.5",
+    "unit": "%",
+    "form": "solution",
+    "type": "liquid"
+  },
+  {
+    "name": "Chlorphenamine",
+    "dosage": "2",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Chlorphenamine",
+    "dosage": "4",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Chlorpromazine",
+    "dosage": "25",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Chlorpromazine",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Chlorpromazine",
+    "dosage": "25",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Chlorpromazine",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Cholera Replacement Fluid",
+    "dosage": "1000",
+    "unit": "mL",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Cholera Replacement Fluid",
+    "dosage": "500",
+    "unit": "mL",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Ciprofloxacin + Tinidazole",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Ciprofloxacin Eye",
+    "dosage": "0.3",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Ciprofloxacin",
+    "dosage": "2",
+    "unit": "mg/ml",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Ciprofloxacin",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Ciprofloxacin",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Clarithromycin",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Clarithromycin",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Clarithromycin Paediatric",
+    "dosage": "125",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Clindamycin",
+    "dosage": "150",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Clindamycin",
+    "dosage": "150",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Clindamycin",
+    "dosage": "75",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Clindamycin Topical",
+    "dosage": "1",
+    "unit": "%",
+    "form": "solution",
+    "type": "liquid"
+  },
+  {
+    "name": "Clobetasol Propionate",
+    "dosage": "0.05",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Clotrimazole + Hydrocortisone",
+    "dosage": "1",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Clotrimazole",
+    "dosage": "1",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Clotrimazole",
+    "dosage": "2",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Clotrimazole",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "pessary",
+    "type": "suppository"
+  },
+  {
+    "name": "Clotrimazole",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "pessary",
+    "type": "suppository"
+  },
+  {
+    "name": "Clotrimazole",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "pessary",
+    "type": "suppository"
+  },
+  {
+    "name": "Cloxacillin",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Cloxacillin",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Codeine",
+    "dosage": "30",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Conjugated Oestrogen + Norgesterol",
+    "dosage": "150",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Conjugated Oestrogen",
+    "dosage": "625",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Conjugated Oestrogen Vaginal",
+    "dosage": "625 1 G microgram/g",
+    "unit": "",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Corticosteroid + Antibiotic Eye",
+    "dosage": "10",
+    "unit": "mL",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Corticosteroid + Antibiotic Eye",
+    "dosage": "10 G",
+    "unit": "",
+    "form": "ointment",
+    "type": "topical"
+  },
+  {
+    "name": "Co-trimoxazole",
+    "dosage": "5",
+    "unit": "mL",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Cotrimoxazole",
+    "dosage": "(400+80) mg Tablet",
+    "unit": "",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Cyclopentolate Eye",
+    "dosage": "1",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Cyclophosphamide",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Prefilled Dalteparin Sodium",
+    "dosage": "5000",
+    "unit": "units",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Darrow's",
+    "dosage": "250",
+    "unit": "mL",
+    "form": "solution",
+    "type": "liquid"
+  },
+  {
+    "name": "Dexamethasone Eye",
+    "dosage": "1",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Dexamethasone Eye",
+    "dosage": "1",
+    "unit": "%",
+    "form": "ointment",
+    "type": "topical"
+  },
+  {
+    "name": "Dexamethasone",
+    "dosage": "4",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Dexamethasone",
+    "dosage": "8",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Dexamethasone",
+    "dosage": "2",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Dexamethasone",
+    "dosage": "4",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Dexamethasone",
+    "dosage": "500",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Dextromethorphan Containing Cough",
+    "dosage": "100",
+    "unit": "mL",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Dextrose in Sodium Chloride Intravenous",
+    "dosage": "250",
+    "unit": "mL",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Dextrose in Sodium Chloride Intravenous",
+    "dosage": "500",
+    "unit": "mL",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Dextrose",
+    "dosage": "10",
+    "unit": "%",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Dextrose",
+    "dosage": "10",
+    "unit": "%",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Dextrose",
+    "dosage": "5",
+    "unit": "%",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Dextrose",
+    "dosage": "5",
+    "unit": "%",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Dextrose",
+    "dosage": "50",
+    "unit": "%",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Diazepam",
+    "dosage": "5",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Rectal Diazepam Rectal",
+    "dosage": "2",
+    "unit": "mg/ml",
+    "form": "tubes",
+    "type": "other"
+  },
+  {
+    "name": "Diazepam",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Diazepam",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Diclofenac",
+    "dosage": "75",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Diclofenac",
+    "dosage": "30 G",
+    "unit": "",
+    "form": "gel",
+    "type": "topical"
+  },
+  {
+    "name": "Diclofenac",
+    "dosage": "75",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Diclofenac",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "suppository",
+    "type": "suppository"
+  },
+  {
+    "name": "Diclofenac",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "suppository",
+    "type": "suppository"
+  },
+  {
+    "name": "Diclofenac",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Diethylstilboestrol",
+    "dosage": "1",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Diethylstilboestrol",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Digoxin",
+    "dosage": "50",
+    "unit": "microgram",
+    "form": "elixir",
+    "type": "liquid"
+  },
+  {
+    "name": "Digoxin",
+    "dosage": "125",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Digoxin",
+    "dosage": "250",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Digoxin",
+    "dosage": "62.5",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Dihydroartemisin + Piperaquine",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "granular",
+    "type": "powder"
+  },
+  {
+    "name": "Dihydrocodeine",
+    "dosage": "30",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Disopyramide",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Disopyramide Phosphate",
+    "dosage": "10",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Docetaxel",
+    "dosage": "20",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Domperidone",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Dopamine",
+    "dosage": "40",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Doxapram",
+    "dosage": "20",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Doxorubicin",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Doxycycline",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Prefilled Enoxaparin Sodium",
+    "dosage": "40",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Ephedrine HCI",
+    "dosage": "30",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Ephedrine Nasal",
+    "dosage": "0.5",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Ephedrine Nasal",
+    "dosage": "1",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Ergometrine",
+    "dosage": "0.2",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Ergometrine",
+    "dosage": "0.5",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Ergometrine",
+    "dosage": "0.5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Ergotamine",
+    "dosage": "2",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Erythromycin",
+    "dosage": "125",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Erythromycin",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Esomeprazole",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Esomeprazole",
+    "dosage": "40",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Ethosuximide",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Ethosuximide",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Etoposide",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Ferric Ammonium Citrate",
+    "dosage": "200",
+    "unit": "mL",
+    "form": "mixture",
+    "type": "liquid"
+  },
+  {
+    "name": "Ferrous Fumarate",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Ferrous Sulphate (BPC)",
+    "dosage": "60",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Ferrous Sulphate + Folic Acid",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Ferrous Sulphate",
+    "dosage": "60",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Finasteride",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Flucloxacillin",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Flucloxacillin",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Flucloxacillin",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Flucloxacillin",
+    "dosage": "125",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Fluconazole",
+    "dosage": "150",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Fluconazole",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Fluconazole",
+    "dosage": "10",
+    "unit": "mg/ml",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Fluconazole",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Fluconazole",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Fludrocortisone",
+    "dosage": "100",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Fluoxetine",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Flupentixol",
+    "dosage": "1",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Flupentixol",
+    "dosage": "500",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Fluphenazine Deconoate",
+    "dosage": "25",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Fluticasone + Salmeterol",
+    "dosage": "250",
+    "unit": "microgram",
+    "form": "inhaler",
+    "type": "inhaler"
+  },
+  {
+    "name": "Fluticasone",
+    "dosage": "125",
+    "unit": "microgram",
+    "form": "mdi",
+    "type": "inhaler"
+  },
+  {
+    "name": "Fluticasone",
+    "dosage": "250",
+    "unit": "microgram",
+    "form": "mdi",
+    "type": "inhaler"
+  },
+  {
+    "name": "Fluvastatin",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Folic Acid",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Furosemide",
+    "dosage": "10",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Furosemide",
+    "dosage": "40",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Gelatin",
+    "dosage": "500",
+    "unit": "mL",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Gentamicin Ear",
+    "dosage": "0.3",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Gentamicin Eye",
+    "dosage": "0.3",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Gentamicin",
+    "dosage": "40",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Glibenclamide",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Gliclazide",
+    "dosage": "80",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Glimepiride",
+    "dosage": "1",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Glimepiride",
+    "dosage": "2",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Glimepiride",
+    "dosage": "3",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Glimepiride",
+    "dosage": "4",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Glucagon",
+    "dosage": "1",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "100 Glyceryl Trinitrate Sublingual",
+    "dosage": "500",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Granisetron",
+    "dosage": "1",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Granisetron",
+    "dosage": "1",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Griseofulvin",
+    "dosage": "125",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Griseofulvin",
+    "dosage": "125",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Griseofulvin",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Guaifenesin Containing Expectorant",
+    "dosage": "100",
+    "unit": "mL",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Haloperidol",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Haloperidol",
+    "dosage": "0.5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Haloperidol",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Haloperidol",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Heparin",
+    "dosage": "1000",
+    "unit": "units",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Heparin",
+    "dosage": "5000",
+    "unit": "units",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Heparin",
+    "dosage": "5000",
+    "unit": "units",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Human Immune Tetanus Globulins",
+    "dosage": "1",
+    "unit": "mL",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Human Immune Tetanus Globulins",
+    "dosage": "2",
+    "unit": "mL",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Hydralazine",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Hydralazine",
+    "dosage": "25",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Hydrocortisone",
+    "dosage": "1",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Hydrocortisone Eye",
+    "dosage": "1",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Hydrocortisone Eye",
+    "dosage": "1",
+    "unit": "%",
+    "form": "ointment",
+    "type": "topical"
+  },
+  {
+    "name": "Hydrocortisone Sodium Succinate",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Hydroxocobalamin",
+    "dosage": "1",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Hydroxyurea",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Hyoscine Butylbromide",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Hyoscine Butylbromide",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Ibuprofen",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Ibuprofen",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Ibuprofen",
+    "dosage": "400",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Imipramine",
+    "dosage": "25",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Insulin premixed (30/70) HM",
+    "dosage": "100",
+    "unit": "units",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Insulin Soluble HM",
+    "dosage": "100",
+    "unit": "units",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Intralipid",
+    "dosage": "500",
+    "unit": "mL",
+    "form": "solution",
+    "type": "liquid"
+  },
+  {
+    "name": "Ipratropium Bromide",
+    "dosage": "250 micrograms Dose",
+    "unit": "",
+    "form": "nebulizer",
+    "type": "inhaler"
+  },
+  {
+    "name": "Ipratropium Bromide",
+    "dosage": "500 micrograms Dose",
+    "unit": "",
+    "form": "nebulizer",
+    "type": "inhaler"
+  },
+  {
+    "name": "Iron (III) Polymaltose Complex",
+    "dosage": "Capsule",
+    "unit": "",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Iron (III) Polymaltose Complex",
+    "dosage": "200",
+    "unit": "mL",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Iron Dextran",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Iron Sucrose",
+    "dosage": "20",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Isophane Insulin",
+    "dosage": "100",
+    "unit": "units",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Isosorbide Dinitrate",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Itraconazole",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Itraconazole",
+    "dosage": "10",
+    "unit": "mg/ml",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Ketoconazole",
+    "dosage": "30",
+    "unit": "g",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Ketoconazole",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Labetalol",
+    "dosage": "5",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Labetalol",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Labetalol",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Lactulose",
+    "dosage": "3.1–3.7",
+    "unit": "g",
+    "form": "liquid",
+    "type": "liquid"
+  },
+  {
+    "name": "Lamotrigine",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Levofloxacin",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Levothyroxine Sodium",
+    "dosage": "100",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Levothyroxine Sodium",
+    "dosage": "25",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Levothyroxine Sodium",
+    "dosage": "50",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Lidocaine",
+    "dosage": "2",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Lidocaine",
+    "dosage": "4",
+    "unit": "%",
+    "form": "gel",
+    "type": "topical"
+  },
+  {
+    "name": "Lisinopril + Hydrochlorthiazide",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Lisinopril + Hydrochlorthiazide",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Lisinopril",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Lisinopril",
+    "dosage": "2.5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Lisinopril",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Lisinopril",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Lodoxamide Eye",
+    "dosage": "0.1",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Lorazepam",
+    "dosage": "4",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Lorazepam",
+    "dosage": "1",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Lorazepam",
+    "dosage": "2",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Lorazepam",
+    "dosage": "2.5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Losartan",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Losartan",
+    "dosage": "25",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Losartan",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Magnesium Sulphate",
+    "dosage": "20",
+    "unit": "%",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Magnesium Sulphate",
+    "dosage": "50",
+    "unit": "%",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Magnesium Sulphate",
+    "dosage": "1 G",
+    "unit": "",
+    "form": "salt",
+    "type": "powder"
+  },
+  {
+    "name": "Magnesium Trisilicate + Aluminium Hydroxide 200 mL",
+    "dosage": "",
+    "unit": "",
+    "form": "mixture",
+    "type": "liquid"
+  },
+  {
+    "name": "Magnesium Trisilicate + Aluminium Hydroxide",
+    "dosage": "Tablet",
+    "unit": "",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Magnesium Trisilicate",
+    "dosage": "200",
+    "unit": "mL",
+    "form": "mixture",
+    "type": "liquid"
+  },
+  {
+    "name": "Magnesium Trisilicate",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Mannitol",
+    "dosage": "10",
+    "unit": "%",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Mannitol",
+    "dosage": "20",
+    "unit": "%",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Mebendazole",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Mebendazole",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Mebendazole",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Mebeverine",
+    "dosage": "135",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Medroxyprogesterone Acetate",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Mefenamic Acid",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Mefenamic Acid",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Metformin",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Methotrexate",
+    "dosage": "2.5",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Methotrexate",
+    "dosage": "25",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Methotrexate",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Methotrexate",
+    "dosage": "2.5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Methyl Cellulose Eye",
+    "dosage": "0.3",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Methyldopa",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Metoclopramide",
+    "dosage": "5",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Metoclopramide",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Metoclopramide",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Metolazone",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Metoprolol Tartrate",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Metronidazole",
+    "dosage": "5",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Metronidazole",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "suppository",
+    "type": "suppository"
+  },
+  {
+    "name": "Metronidazole",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Metronidazole",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Metronidazole",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Metronidazole",
+    "dosage": "400",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Miconazole + Hydrocortisone",
+    "dosage": "2",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Miconazole",
+    "dosage": "2",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Miconazole Oral",
+    "dosage": "25",
+    "unit": "mg/ml",
+    "form": "gel",
+    "type": "topical"
+  },
+  {
+    "name": "Miconazole",
+    "dosage": "400",
+    "unit": "mg",
+    "form": "ovule",
+    "type": "suppository"
+  },
+  {
+    "name": "Midazolam",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Midazolam",
+    "dosage": "15",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Morphine",
+    "dosage": "10",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Morphine",
+    "dosage": "10",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Morphine Sulphate",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Morphine Sulphate",
+    "dosage": "30",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Multivitamin",
+    "dosage": "20",
+    "unit": "mL",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Multivitamin",
+    "dosage": "125",
+    "unit": "mL",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Multivitamin",
+    "dosage": "Tablet",
+    "unit": "",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Naloxone",
+    "dosage": "400",
+    "unit": "microgram",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Neomycin",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Neostigmine Bromide",
+    "dosage": "15",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Neostigmine",
+    "dosage": "2.5",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Nifedipine",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Nifedipine",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Nifedipine",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Nifedipine",
+    "dosage": "30",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Nitrofurantoin",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Norethisterone",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Nystatin",
+    "dosage": "100,000",
+    "unit": "iu",
+    "form": "ointment",
+    "type": "topical"
+  },
+  {
+    "name": "Nystatin",
+    "dosage": "100,000",
+    "unit": "iu",
+    "form": "pessary",
+    "type": "suppository"
+  },
+  {
+    "name": "Nystatin",
+    "dosage": "100,000",
+    "unit": "iu",
+    "form": "suspension",
+    "type": "liquid"
+  },
+  {
+    "name": "Nystatin",
+    "dosage": "500,000",
+    "unit": "iu",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Olanzapine",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Omeprazole",
+    "dosage": "40",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Omeprazole",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Ondansetrone",
+    "dosage": "4",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Oral Rehydration Salts",
+    "dosage": "Sachet",
+    "unit": "",
+    "form": "powder",
+    "type": "powder"
+  },
+  {
+    "name": "Oxytocin",
+    "dosage": "10",
+    "unit": "units",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Oxytocin",
+    "dosage": "5",
+    "unit": "units",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Paclitaxel",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Paracetamol",
+    "dosage": "125",
+    "unit": "mg",
+    "form": "suppository",
+    "type": "suppository"
+  },
+  {
+    "name": "Paracetamol",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "suppository",
+    "type": "suppository"
+  },
+  {
+    "name": "Paracetamol",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "suppository",
+    "type": "suppository"
+  },
+  {
+    "name": "Paracetamol",
+    "dosage": "120",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Paracetamol",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Paraffin",
+    "dosage": "100",
+    "unit": "mL",
+    "form": "liquid",
+    "type": "liquid"
+  },
+  {
+    "name": "Pethidine",
+    "dosage": "50",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Phenobarbital",
+    "dosage": "15",
+    "unit": "mg",
+    "form": "elixir",
+    "type": "liquid"
+  },
+  {
+    "name": "Phenobarbital",
+    "dosage": "200",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Phenobarbital",
+    "dosage": "30",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Phenobarbital",
+    "dosage": "60",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Phenol 5% in Almond Oil",
+    "dosage": "50",
+    "unit": "mL",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Phenoxymethyl Penicillin",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Phenytoin",
+    "dosage": "50",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Phenytoin Sodium",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Phenytoin Sodium",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Phytomenadione",
+    "dosage": "1",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Phytomenadione",
+    "dosage": "10",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Pilocarpine Eye",
+    "dosage": "2",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Pilocarpine Eye",
+    "dosage": "4",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Pioglitazone",
+    "dosage": "15",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Pioglitazone",
+    "dosage": "30",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Piracetam",
+    "dosage": "800",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Potassium Chloride",
+    "dosage": "20",
+    "unit": "meq",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Potassium Chloride",
+    "dosage": "600",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Potassium Citrate",
+    "dosage": "200",
+    "unit": "mL",
+    "form": "mixture",
+    "type": "liquid"
+  },
+  {
+    "name": "Povidone Iodine Aqueous",
+    "dosage": "10",
+    "unit": "%",
+    "form": "solution",
+    "type": "liquid"
+  },
+  {
+    "name": "Povidone Iodine",
+    "dosage": "10",
+    "unit": "%",
+    "form": "ointment",
+    "type": "topical"
+  },
+  {
+    "name": "Praziquantel",
+    "dosage": "600",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Prazosin",
+    "dosage": "500",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Prednisolone 5mg Dispersible Tablets",
+    "dosage": "",
+    "unit": "",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Prednisolone Eye",
+    "dosage": "0.5",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Prednisolone Eye",
+    "dosage": "1",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Prednisolone Oral",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "solution",
+    "type": "liquid"
+  },
+  {
+    "name": "Prednisolone",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Primidone",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Procaine Benzylpenicillin",
+    "dosage": "4 MU Vial",
+    "unit": "",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Promethazine Hydrochloride",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "elixir",
+    "type": "liquid"
+  },
+  {
+    "name": "Promethazine Hydrochloride",
+    "dosage": "25",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Promethazine Hydrochloride",
+    "dosage": "25",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Promethazine Theoclate",
+    "dosage": "25",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Propranolol",
+    "dosage": "1",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Propranolol",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Propranolol",
+    "dosage": "40",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Propranolol",
+    "dosage": "80",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Propylthiouracil",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Protamine Sulphate",
+    "dosage": "10",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Quinine",
+    "dosage": "300",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Quinine",
+    "dosage": "75",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Quinine",
+    "dosage": "300",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Ramipril",
+    "dosage": "2.5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Ramipril",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Ranitidine",
+    "dosage": "150",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Retinol Soft",
+    "dosage": "200,000",
+    "unit": "iu",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Ringer - Lactate",
+    "dosage": "500",
+    "unit": "mL",
+    "form": "solution",
+    "type": "liquid"
+  },
+  {
+    "name": "Risperidone",
+    "dosage": "1",
+    "unit": "mg/ml",
+    "form": "liquid",
+    "type": "liquid"
+  },
+  {
+    "name": "Risperidone",
+    "dosage": "1",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Risperidone",
+    "dosage": "2",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Risperidone",
+    "dosage": "500",
+    "unit": "microgram",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Rituximab",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Salbutamol",
+    "dosage": "2.5",
+    "unit": "mg",
+    "form": "nebules",
+    "type": "inhaler"
+  },
+  {
+    "name": "Salbutamol",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "nebules",
+    "type": "inhaler"
+  },
+  {
+    "name": "Salbutamol Sulphate",
+    "dosage": "500",
+    "unit": "microgram",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Salbutamol",
+    "dosage": "2",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Salicylic Acid",
+    "dosage": "2",
+    "unit": "%",
+    "form": "ointment",
+    "type": "topical"
+  },
+  {
+    "name": "Secnidazole",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Selenium Sulphide",
+    "dosage": "2.5",
+    "unit": "%",
+    "form": "shampoo",
+    "type": "topical"
+  },
+  {
+    "name": "Sertraline",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Sertraline",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Silver Sulphadiazine",
+    "dosage": "1",
+    "unit": "%",
+    "form": "cream",
+    "type": "topical"
+  },
+  {
+    "name": "Simple",
+    "dosage": "125",
+    "unit": "mL",
+    "form": "linctus",
+    "type": "liquid"
+  },
+  {
+    "name": "Simple",
+    "dosage": "200",
+    "unit": "mL",
+    "form": "linctus",
+    "type": "liquid"
+  },
+  {
+    "name": "Simvastatin",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Simvastatin",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Simvastatin",
+    "dosage": "40",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Simvastatin",
+    "dosage": "80",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Sodium Bicarbonate",
+    "dosage": "8.4",
+    "unit": "%",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Sodium Chloride",
+    "dosage": "0.45",
+    "unit": "%",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Sodium Chloride",
+    "dosage": "0.9",
+    "unit": "%",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Sodium Chloride Nasal",
+    "dosage": "0.9",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Sodium Valproate",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Sodium Valproate",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Sodium Valproate",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "syrup",
+    "type": "liquid"
+  },
+  {
+    "name": "Sodium Valproate",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Soothing Agent + Local Anaesthetic + Steroid 15 G",
+    "dosage": "",
+    "unit": "",
+    "form": "ointment",
+    "type": "topical"
+  },
+  {
+    "name": "Soothing Agent + Local Anaesthetic + Steroid Supp",
+    "dosage": "",
+    "unit": "",
+    "form": "suppository",
+    "type": "suppository"
+  },
+  {
+    "name": "Soothing Agent + Local Anaesthetic",
+    "dosage": "15 G",
+    "unit": "",
+    "form": "ointment",
+    "type": "topical"
+  },
+  {
+    "name": "Soothing Agent + Local Anaesthetic",
+    "dosage": "Supp",
+    "unit": "",
+    "form": "suppository",
+    "type": "suppository"
+  },
+  {
+    "name": "Spironolactone",
+    "dosage": "25",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Spironolactone",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Streptokinase",
+    "dosage": "100,000 unit-vial Vial",
+    "unit": "",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Streptokinase",
+    "dosage": "250,000 unit-vial Vial",
+    "unit": "",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Streptokinase",
+    "dosage": "750,000 unit-vial Vial",
+    "unit": "",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Sulfasalazine",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Tamoxifen",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Tamoxifen",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Tamsulosin",
+    "dosage": "400",
+    "unit": "microgram",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Terazosin",
+    "dosage": "2",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Terazosin",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Terbinafine HCl",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Tetracycline",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Tetracycline Eye",
+    "dosage": "1",
+    "unit": "%",
+    "form": "ointment",
+    "type": "topical"
+  },
+  {
+    "name": "Theophylline",
+    "dosage": "200",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Thiamine",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Thiamine",
+    "dosage": "100",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Thiamine",
+    "dosage": "50",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Tiabendazole",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Timolol Maleate Eye",
+    "dosage": "0.5",
+    "unit": "%",
+    "form": "drops",
+    "type": "drops"
+  },
+  {
+    "name": "Tinidazole",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Tirofiban",
+    "dosage": "100",
+    "unit": "mL",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Tirofiban",
+    "dosage": "100",
+    "unit": "mL",
+    "form": "infusion",
+    "type": "injection"
+  },
+  {
+    "name": "Tolbutamide",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Tranexamic Acid",
+    "dosage": "250",
+    "unit": "mg",
+    "form": "capsule",
+    "type": "pills"
+  },
+  {
+    "name": "Tranexamic Acid",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Tranexamic Acid",
+    "dosage": "500",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Trihexyphenidyl",
+    "dosage": "2",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Trihexyphenidyl",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Verapamil",
+    "dosage": "40",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Verapamil",
+    "dosage": "80",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Vincristine",
+    "dosage": "1",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Vincristine",
+    "dosage": "2",
+    "unit": "mg",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Warfarin",
+    "dosage": "1",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Warfarin",
+    "dosage": "3",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Warfarin",
+    "dosage": "5",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Water for",
+    "dosage": "10",
+    "unit": "mL",
+    "form": "injection",
+    "type": "injection"
+  },
+  {
+    "name": "Zinc",
+    "dosage": "10",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "Zinc",
+    "dosage": "20",
+    "unit": "mg",
+    "form": "tablet",
+    "type": "pills"
+  },
+  {
+    "name": "5FLUORIN1 5-Fluorouracil",
+    "dosage": "50",
+    "unit": "mg/ml",
+    "form": "injection",
+    "type": "injection"
+  }
+]

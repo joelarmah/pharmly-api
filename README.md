@@ -12,7 +12,9 @@ FastAPI · Pydantic v2 · SQLAlchemy 2.0 + Alembic · PostgreSQL · JWT auth · 
 
 ## Status
 
-Auth domain (PRD §5.1) is implemented. See the PRD's §9 ("Open questions for the product owner") for decisions that need to be made before other domains (Paystack account, pharmacy partner data, medicine catalog management) can be fully built.
+Auth (§5.1), Prescriptions (§5.2), and Pharmacy pricing (§5.3) are implemented. See the PRD's §9 ("Open questions for the product owner") for decisions that need to be made before other domains (Paystack account, real pharmacy partner data, medicine catalog management) can be fully built.
+
+Pharmacy pricing currently runs on **seeded, synthetic data** — see "Seeding pricing data" below — since no real pharmacy/POS integration exists yet (PRD §9 #4).
 
 ## Running locally
 
@@ -41,3 +43,15 @@ cp .env.example .env   # point DATABASE_URL at your own Postgres
 .venv/bin/pytest
 .venv/bin/ruff check .
 ```
+
+**Seeding pricing data:**
+
+`POST /orders/pricing` needs `medication_catalog`, `pharmacies`, and `pharmacy_prices` populated. Run once per environment (idempotent — safe to re-run):
+
+```
+docker compose exec api python -m scripts.seed_pricing_data
+# or, without Docker:
+.venv/bin/python -m scripts.seed_pricing_data
+```
+
+This loads the real 549-entry Ghana NHIS medication list plus a handful of seeded pharmacies, and generates **synthetic** per-pharmacy prices — there's no real partner pricing data yet. See `scripts/seed_pricing_data.py` for details.

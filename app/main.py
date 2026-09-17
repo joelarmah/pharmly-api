@@ -3,7 +3,7 @@ import logging
 from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
-from app.api.v1 import auth, me, prescriptions
+from app.api.v1 import auth, me, orders, prescriptions
 from app.core.config import settings
 from app.core.exceptions import install_exception_handlers
 
@@ -19,6 +19,7 @@ install_exception_handlers(app)
 app.include_router(auth.router)
 app.include_router(me.router)
 app.include_router(prescriptions.router)
+app.include_router(orders.router)
 
 app.mount(
     "/uploads", StaticFiles(directory=settings.local_storage_dir, check_dir=False), name="uploads"
