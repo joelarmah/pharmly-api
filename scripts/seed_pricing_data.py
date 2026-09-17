@@ -116,6 +116,7 @@ async def _seed_prices(
                     pharmacy_id=pharmacy.id,
                     catalog_id=entry.id,
                     unit_price=_synthetic_unit_price(pharmacy.id, entry),
+                    source="seed",
                 )
             )
             added += 1

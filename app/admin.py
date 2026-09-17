@@ -95,7 +95,22 @@ class PharmacyPriceAdmin(ModelView, model=PharmacyPrice):
     name = "Price"
     name_plural = "Pharmacy Prices"
     icon = "fa-solid fa-tag"
-    column_list = [PharmacyPrice.pharmacy_id, PharmacyPrice.catalog_id, PharmacyPrice.unit_price]
+    column_list = [
+        PharmacyPrice.pharmacy_id,
+        PharmacyPrice.catalog_id,
+        PharmacyPrice.unit_price,
+        PharmacyPrice.stock_quantity,
+        PharmacyPrice.source,
+        PharmacyPrice.synced_at,
+    ]
+
+    async def on_model_change(
+        self, data: dict, model: PharmacyPrice, is_created: bool, request: Request
+    ) -> None:
+        # A hand-edit through this panel *is* the manual-entry pathway --
+        # stamp provenance so it's never mistaken for stale seed/partner data.
+        data["source"] = "manual"
+        data["synced_at"] = utcnow()
 
 
 class UserAdmin(ModelView, model=User):
