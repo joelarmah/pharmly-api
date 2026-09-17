@@ -58,4 +58,14 @@ This loads the real 549-entry Ghana NHIS medication list plus a handful of seede
 
 **Admin panel:**
 
-`/admin` (e.g. `http://localhost:8000/admin`) is a browsable admin UI (via [sqladmin](https://github.com/aminalaee/sqladmin)) for viewing and editing pharmacy/medication data — log in with the `ADMIN_PASSWORD` from your `.env`. Pharmacies, the medication catalog, and pharmacy prices are fully editable; Users and Prescriptions are read-only (support/debugging visibility only — PIN hashes are never shown, and export is disabled for User data since it's PII). This is a cheap v1 credential, same spirit as the `X-Admin-Key` the PRD suggests for future catalog-management endpoints (§5.6) — **must** be overridden outside of dev.
+`/admin` (e.g. `http://localhost:8000/admin`) is a browsable admin UI (via [sqladmin](https://github.com/aminalaee/sqladmin)) for viewing and editing pharmacy/medication data. Pharmacies, the medication catalog, and pharmacy prices are fully editable; Users, Prescriptions, and Admin Accounts are read-only (support/debugging visibility only — PIN hashes and password hashes are never shown, and export is disabled for User data since it's PII).
+
+Login is per-person, not a shared password — there's no self-signup, so create the first account via the CLI:
+
+```
+docker compose exec api python -m scripts.manage_admin_users create <your-username>
+# or, without Docker:
+.venv/bin/python -m scripts.manage_admin_users create <your-username>
+```
+
+You'll be prompted for a password (never passed as a CLI argument, so it doesn't end up in shell history). Other subcommands: `list`, `disable <username>`, `enable <username>`, `set-password <username>`. See `scripts/manage_admin_users.py` for details.
