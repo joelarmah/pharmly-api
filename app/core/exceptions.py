@@ -28,7 +28,7 @@ def _message_from_detail(detail: object) -> str:
 # to interpret. Keyed by field name rather than by pattern since e.g. PIN
 # and OTP `code` share the same "6 digits" pattern but need different copy.
 _FIELD_FORMAT_HINTS: dict[str, str] = {
-    "phone_number": "Phone number must be in international format, e.g. +233244245902.",
+    "phone_number": "Phone number must be in international format, e.g. +233XXXXXXXXX.",
     "pin": "PIN must be exactly 6 digits.",
     "current_pin": "Current PIN must be exactly 6 digits.",
     "new_pin": "New PIN must be exactly 6 digits.",
