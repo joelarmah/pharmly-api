@@ -1,7 +1,23 @@
+import json
+
 import pytest
 from httpx import AsyncClient
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
+from app.models.order import Order
+from app.models.pharmacy import (
+    DosageUnit,
+    MedicationCatalog,
+    MedicationForm,
+    MedicationType,
+    Pharmacy,
+    PharmacyProduct,
+)
+from app.models.prescription import Medication, Prescription
+from app.models.refresh_token import RefreshToken
+from app.models.user import User
 from tests.conftest import FakeSmsSender
 from tests.helpers import PHONE, get_otp_code, signup
 
@@ -231,3 +247,132 @@ async def test_delete_me_removes_account(client: AsyncClient, fake_sms: FakeSmsS
 
     login_resp = await client.post("/v1/auth/login", json={"phone_number": PHONE, "pin": "123456"})
     assert login_resp.status_code == 401
+
+
+async def test_delete_me_then_get_me_with_old_token_is_401(
+    client: AsyncClient, fake_sms: FakeSmsSender
+) -> None:
+    session = await signup(client, fake_sms)
+    headers = {"Authorization": f"Bearer {session['access_token']}"}
+
+    delete_resp = await client.delete("/v1/me", headers=headers)
+    assert delete_resp.status_code == 204
+
+    # Same still-valid (not yet expired) access token -- must not keep
+    # working just because it hasn't expired yet.
+    get_resp = await client.get("/v1/me", headers=headers)
+    assert get_resp.status_code == 401
+
+
+async def test_delete_me_cascades_related_rows(
+    client: AsyncClient, fake_sms: FakeSmsSender, db_session: AsyncSession
+) -> None:
+    session = await signup(client, fake_sms)
+    headers = {"Authorization": f"Bearer {session['access_token']}"}
+    user_id = session["user"]["id"]
+
+    async def _get_or_create(model: type, name: str):
+        existing = (
+            await db_session.execute(select(model).where(model.name == name))
+        ).scalar_one_or_none()
+        if existing is not None:
+            return existing
+        row = model(name=name)
+        db_session.add(row)
+        await db_session.commit()
+        await db_session.refresh(row)
+        return row
+
+    pharmacy = Pharmacy(name="Test Pharmacy", latitude=5.6, longitude=-0.18)
+    db_session.add(pharmacy)
+    unit_row = await _get_or_create(DosageUnit, "mg")
+    form_row = await _get_or_create(MedicationForm, "tablet")
+    type_row = await _get_or_create(MedicationType, "pills")
+    catalog = MedicationCatalog(
+        name="Amoxicillin",
+        dosage="500",
+        unit_id=unit_row.id,
+        form_id=form_row.id,
+        type_id=type_row.id,
+    )
+    db_session.add(catalog)
+    await db_session.commit()
+    await db_session.refresh(pharmacy)
+    await db_session.refresh(catalog)
+    db_session.add(PharmacyProduct(pharmacy_id=pharmacy.id, catalog_id=catalog.id, unit_price=2.0))
+    await db_session.commit()
+
+    medications = [
+        {
+            "id": "client-uuid",
+            "name": "Amoxicillin",
+            "dosage": "500",
+            "dosage_unit": "mg",
+            "quantity": 5,
+            "quantity_unit": "capsule",
+            "type": "pills",
+            "dose_amount": 1,
+            "duration_days": 5,
+            "reminder_enabled": False,
+            "notification_days": [],
+            "frequency": "Once Daily",
+            "times": ["8:00 AM"],
+            "start_from": "2026-09-16T08:00:00.000",
+            "end_on": "2026-09-21T08:00:00.000",
+        }
+    ]
+    submit_resp = await client.post(
+        "/v1/prescriptions/submit",
+        data={"medications": json.dumps(medications)},
+        headers=headers,
+    )
+    assert submit_resp.status_code == 201
+    prescription_id = submit_resp.json()["id"]
+
+    order_resp = await client.post(
+        "/v1/orders",
+        json={
+            "prescription_id": prescription_id,
+            "pharmacy_id": pharmacy.id,
+            "payment_type": "cashOnDelivery",
+        },
+        headers=headers,
+    )
+    assert order_resp.status_code == 201
+
+    # Sanity check: everything actually exists before deleting.
+    assert (
+        await db_session.execute(select(RefreshToken).where(RefreshToken.user_id == user_id))
+    ).scalars().first() is not None
+    assert (
+        await db_session.execute(select(Prescription).where(Prescription.id == prescription_id))
+    ).scalars().first() is not None
+    assert (
+        await db_session.execute(
+            select(Medication).where(Medication.prescription_id == prescription_id)
+        )
+    ).scalars().first() is not None
+    assert (
+        await db_session.execute(select(Order).where(Order.user_id == user_id))
+    ).scalars().first() is not None
+
+    delete_resp = await client.delete("/v1/me", headers=headers)
+    assert delete_resp.status_code == 204
+
+    assert (
+        await db_session.execute(select(User).where(User.id == user_id))
+    ).scalars().first() is None
+    assert (
+        await db_session.execute(select(RefreshToken).where(RefreshToken.user_id == user_id))
+    ).scalars().first() is None
+    assert (
+        await db_session.execute(select(Prescription).where(Prescription.id == prescription_id))
+    ).scalars().first() is None
+    assert (
+        await db_session.execute(
+            select(Medication).where(Medication.prescription_id == prescription_id)
+        )
+    ).scalars().first() is None
+    assert (
+        await db_session.execute(select(Order).where(Order.user_id == user_id))
+    ).scalars().first() is None

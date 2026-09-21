@@ -12,7 +12,9 @@ class Prescription(Base):
     __tablename__ = "prescriptions"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True, nullable=False)
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False
+    )
     image_url: Mapped[str | None] = mapped_column(String, nullable=True)
     status: Mapped[str] = mapped_column(String, nullable=False, default="submitted")
     submitted_at: Mapped[datetime] = mapped_column(DateTime(), default=utcnow, nullable=False)
@@ -29,7 +31,7 @@ class Medication(Base):
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
     prescription_id: Mapped[str] = mapped_column(
-        ForeignKey("prescriptions.id"), index=True, nullable=False
+        ForeignKey("prescriptions.id", ondelete="CASCADE"), index=True, nullable=False
     )
     position: Mapped[int] = mapped_column(Integer, nullable=False)
 
