@@ -82,7 +82,13 @@ class MedicationCatalog(Base):
     type: Mapped[MedicationType] = relationship()
 
     def __str__(self) -> str:
-        return f"{self.name} {self.dosage}{self.unit.name}"
+        # Deliberately name/dosage only, not self.unit.name -- unit is a
+        # relationship one hop beyond what sqladmin eager-loads when this
+        # renders via a *different* view (e.g. PharmacyProductAdmin's
+        # `catalog` column), which threw a real DetachedInstanceError in
+        # production. name/dosage are plain columns on this row itself, so
+        # they're always safe to read regardless of what loaded this object.
+        return f"{self.name} {self.dosage}"
 
 
 class Pharmacy(Base):
