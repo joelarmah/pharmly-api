@@ -33,5 +33,11 @@ class Settings(BaseSettings):
     local_storage_dir: str = "uploads"
     public_base_url: str = "http://localhost:8000"
 
+    # Test vs. live is purely which secret key is configured (sk_test_...
+    # vs sk_live_...) -- Paystack has one API base URL, no separate
+    # sandbox flag needed (unlike Arkesel).
+    paystack_secret_key: str | None = None
+    paystack_verify_cache_seconds: int = 5
+
 
 settings = Settings()

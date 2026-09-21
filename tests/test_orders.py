@@ -5,6 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.order import Order
+from app.models.payment import PaymentTransaction
 from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyProduct
 from tests.conftest import FakeSmsSender
 from tests.helpers import PHONE, signup
@@ -32,6 +33,25 @@ MED_B = {**MED_A, "id": "client-uuid-b", "name": "Paracetamol", "dosage": "500",
 async def _auth_headers(client: AsyncClient, fake_sms: FakeSmsSender, phone: str = PHONE) -> dict:
     session = await signup(client, fake_sms, phone)
     return {"Authorization": f"Bearer {session['access_token']}"}
+
+
+async def _auth_session(client: AsyncClient, fake_sms: FakeSmsSender, phone: str = PHONE) -> dict:
+    session = await signup(client, fake_sms, phone)
+    session["headers"] = {"Authorization": f"Bearer {session['access_token']}"}
+    return session
+
+
+async def _add_payment_transaction(
+    db_session: AsyncSession,
+    user_id: str,
+    reference: str,
+    amount: float,
+    status: str = "success",
+) -> None:
+    db_session.add(
+        PaymentTransaction(reference=reference, user_id=user_id, amount=amount, status=status)
+    )
+    await db_session.commit()
 
 
 async def _submit_prescription(client: AsyncClient, headers: dict, medications: list[dict]) -> dict:
@@ -341,3 +361,96 @@ async def test_get_order_404_on_someone_elses_order(
     headers_b = await _auth_headers(client, fake_sms, "+233242222222")
     resp = await client.get(f"/v1/orders/{order.json()['order_id']}", headers=headers_b)
     assert resp.status_code == 404
+
+
+async def test_place_order_422_if_payment_reference_missing_for_card_payment(
+    client: AsyncClient, fake_sms: FakeSmsSender, db_session: AsyncSession
+) -> None:
+    session = await _auth_session(client, fake_sms)
+    prescription = await _seed_orderable_prescription(client, db_session, session["headers"])
+
+    resp = await client.post(
+        "/v1/orders",
+        json={
+            "prescription_id": prescription["id"],
+            "pharmacy_id": "ph_1",
+            "payment_type": "card",
+        },
+        headers=session["headers"],
+    )
+    assert resp.status_code == 422
+
+
+async def test_place_order_422_if_payment_not_successful(
+    client: AsyncClient, fake_sms: FakeSmsSender, db_session: AsyncSession
+) -> None:
+    session = await _auth_session(client, fake_sms)
+    prescription = await _seed_orderable_prescription(client, db_session, session["headers"])
+    await _add_payment_transaction(
+        db_session, session["user"]["id"], "PSK-pending", amount=100.0, status="pending"
+    )
+
+    resp = await client.post(
+        "/v1/orders",
+        json={
+            "prescription_id": prescription["id"],
+            "pharmacy_id": "ph_1",
+            "payment_type": "card",
+            "payment_reference": "PSK-pending",
+        },
+        headers=session["headers"],
+    )
+    assert resp.status_code == 422
+
+
+async def test_place_order_422_if_payment_amount_insufficient(
+    client: AsyncClient, fake_sms: FakeSmsSender, db_session: AsyncSession
+) -> None:
+    session = await _auth_session(client, fake_sms)
+    prescription = await _seed_orderable_prescription(client, db_session, session["headers"])
+    # Order total will be 21 * 2.0 = 42.0 -- pay far too little.
+    await _add_payment_transaction(
+        db_session, session["user"]["id"], "PSK-short", amount=1.0, status="success"
+    )
+
+    resp = await client.post(
+        "/v1/orders",
+        json={
+            "prescription_id": prescription["id"],
+            "pharmacy_id": "ph_1",
+            "payment_type": "card",
+            "payment_reference": "PSK-short",
+        },
+        headers=session["headers"],
+    )
+    assert resp.status_code == 422
+
+
+async def test_place_order_succeeds_and_links_payment_transaction_for_successful_card_payment(
+    client: AsyncClient, fake_sms: FakeSmsSender, db_session: AsyncSession
+) -> None:
+    session = await _auth_session(client, fake_sms)
+    prescription = await _seed_orderable_prescription(client, db_session, session["headers"])
+    await _add_payment_transaction(
+        db_session, session["user"]["id"], "PSK-good", amount=100.0, status="success"
+    )
+
+    resp = await client.post(
+        "/v1/orders",
+        json={
+            "prescription_id": prescription["id"],
+            "pharmacy_id": "ph_1",
+            "payment_type": "card",
+            "payment_reference": "PSK-good",
+        },
+        headers=session["headers"],
+    )
+    assert resp.status_code == 201
+    order_id = resp.json()["order_id"]
+
+    transaction = (
+        await db_session.execute(
+            select(PaymentTransaction).where(PaymentTransaction.reference == "PSK-good")
+        )
+    ).scalar_one()
+    assert transaction.order_id == order_id

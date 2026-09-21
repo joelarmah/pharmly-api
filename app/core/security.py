@@ -1,4 +1,5 @@
 import hashlib
+import hmac
 import secrets
 from datetime import UTC, datetime, timedelta
 from typing import Any, Literal
@@ -99,3 +100,14 @@ def hash_refresh_token(token: str) -> str:
 
 def generate_otp_code() -> str:
     return "".join(secrets.choice("0123456789") for _ in range(settings.otp_length))
+
+
+def verify_paystack_signature(payload: bytes, signature: str | None, secret: str) -> bool:
+    """Paystack signs webhook bodies with HMAC-SHA512 of the raw request
+    bytes, using your secret key -- see the `x-paystack-signature` header.
+    Compares with hmac.compare_digest to avoid a timing side-channel.
+    """
+    if not signature:
+        return False
+    expected = hmac.new(secret.encode(), payload, hashlib.sha512).hexdigest()
+    return hmac.compare_digest(expected, signature)

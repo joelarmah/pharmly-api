@@ -28,9 +28,9 @@ class Order(Base):
         ForeignKey("pharmacies.id"), index=True, nullable=False
     )
     payment_type: Mapped[str] = mapped_column(String, nullable=False)
-    # Accepted/stored as given for card/mobileMoney -- not yet verified
-    # against Paystack (PRD §5.5, not built yet). Flagged, not silently
-    # trusted.
+    # For card/mobileMoney, order_service.place_order verifies this against
+    # a successful PaymentTransaction (amount-checked too) before accepting
+    # the order -- see app/services/payment_service.py.
     payment_reference: Mapped[str | None] = mapped_column(String, nullable=True)
     progress: Mapped[str] = mapped_column(String, nullable=False, default="preparing")
     # Computed server-side from PharmacyProduct prices at placement time --

@@ -12,7 +12,7 @@ FastAPI · Pydantic v2 · SQLAlchemy 2.0 + Alembic · PostgreSQL · JWT auth · 
 
 ## Status
 
-Auth (§5.1), Prescriptions (§5.2), Pharmacy pricing (§5.3), and Orders (§5.4) are implemented. See the PRD's §9 ("Open questions for the product owner") for what's still open: Paystack live keys (§5.5, not built), and the customer-facing medicine catalog endpoints (§5.6).
+Auth (§5.1), Prescriptions (§5.2), Pharmacy pricing (§5.3), Orders (§5.4), and Payments (§5.5, Paystack) are implemented. Payments runs against Paystack's **test** API — live keys are still needed before going live (PRD §9 #3). See the PRD's §9 for what else is still open: the customer-facing medicine catalog endpoints (§5.6).
 
 Pharmacy pricing currently runs on **seeded, synthetic data** — see "Seeding pricing data" below — since no real pharmacy/POS integration exists yet (PRD §9 #4).
 
@@ -21,7 +21,7 @@ Pharmacy pricing currently runs on **seeded, synthetic data** — see "Seeding p
 **Docker (recommended):**
 
 ```
-cp .env.example .env   # then fill in JWT_SECRET and (optionally) ARKESEL_API_KEY
+cp .env.example .env   # then fill in JWT_SECRET, PAYSTACK_SECRET_KEY, and (optionally) ARKESEL_API_KEY
 docker compose up --build
 ```
 
@@ -58,7 +58,7 @@ This loads the real 549-entry Ghana NHIS medication list plus a handful of seede
 
 **Admin panel:**
 
-`/admin` (e.g. `http://localhost:8000/admin`) is a browsable admin UI (via [sqladmin](https://github.com/aminalaee/sqladmin)) for viewing and editing pharmacy/medication data. Pharmacies, the medication catalog, and pharmacy products are fully editable; Users, Prescriptions, and Admin Accounts are read-only (support/debugging visibility only — PIN hashes and password hashes are never shown, and export is disabled for User data since it's PII). Orders are mostly read-only too, except `progress` — there's no dedicated order-status API endpoint (PRD §9 #1), so this panel is the real status-update mechanism until a real ops/courier channel exists.
+`/admin` (e.g. `http://localhost:8000/admin`) is a browsable admin UI (via [sqladmin](https://github.com/aminalaee/sqladmin)) for viewing and editing pharmacy/medication data. Pharmacies, the medication catalog, and pharmacy products are fully editable; Users, Prescriptions, Payment Transactions, and Admin Accounts are read-only (support/debugging visibility only — PIN hashes and password hashes are never shown, and export is disabled for User data since it's PII). Orders are mostly read-only too, except `progress` — there's no dedicated order-status API endpoint (PRD §9 #1), so this panel is the real status-update mechanism until a real ops/courier channel exists.
 
 Login is per-person, not a shared password — there's no self-signup, so create the first account via the CLI:
 
