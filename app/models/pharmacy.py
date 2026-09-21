@@ -9,6 +9,50 @@ from app.core.time import utcnow
 from app.db.base import Base
 
 
+class MedicationType(Base):
+    """Fixed vocabulary for MedicationCatalog.type (e.g. "pills",
+    "injection") -- own table (rather than a free-text column) so the
+    admin panel can offer a real dropdown instead of free text, and
+    GET /medications/catalog/metadata (PRD §5.6) has an authoritative,
+    typo-free source instead of deriving from whatever strings happen to
+    be in use.
+    """
+
+    __tablename__ = "medication_types"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
+    name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class MedicationForm(Base):
+    """Same reasoning as MedicationType, for MedicationCatalog.form
+    (e.g. "tablet", "syrup")."""
+
+    __tablename__ = "medication_forms"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
+    name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class DosageUnit(Base):
+    """Same reasoning as MedicationType, for MedicationCatalog.unit
+    (e.g. "mg", "mL")."""
+
+    __tablename__ = "dosage_units"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
+    name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class MedicationCatalog(Base):
     """Own the drug data (PRD §5.6's data model, pulled forward as pricing's
     foundation -- the §5.6 endpoints themselves are a separate future PR).
@@ -16,19 +60,29 @@ class MedicationCatalog(Base):
 
     __tablename__ = "medication_catalog"
     __table_args__ = (
-        UniqueConstraint("name", "dosage", "unit", name="uq_medication_catalog_name_dosage_unit"),
+        UniqueConstraint(
+            "name", "dosage", "unit_id", name="uq_medication_catalog_name_dosage_unit"
+        ),
     )
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
     name: Mapped[str] = mapped_column(String, index=True, nullable=False)
     dosage: Mapped[str] = mapped_column(String, nullable=False)
-    unit: Mapped[str] = mapped_column(String, nullable=False)
-    form: Mapped[str] = mapped_column(String, nullable=False)
-    type: Mapped[str] = mapped_column(String, nullable=False)
+    unit_id: Mapped[str] = mapped_column(ForeignKey("dosage_units.id"), index=True, nullable=False)
+    form_id: Mapped[str] = mapped_column(
+        ForeignKey("medication_forms.id"), index=True, nullable=False
+    )
+    type_id: Mapped[str] = mapped_column(
+        ForeignKey("medication_types.id"), index=True, nullable=False
+    )
     retired_at: Mapped[datetime | None] = mapped_column(DateTime(), nullable=True)
 
+    unit: Mapped[DosageUnit] = relationship()
+    form: Mapped[MedicationForm] = relationship()
+    type: Mapped[MedicationType] = relationship()
+
     def __str__(self) -> str:
-        return f"{self.name} {self.dosage}{self.unit}"
+        return f"{self.name} {self.dosage}{self.unit.name}"
 
 
 class Pharmacy(Base):

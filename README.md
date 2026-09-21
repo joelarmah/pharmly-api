@@ -12,7 +12,7 @@ FastAPI · Pydantic v2 · SQLAlchemy 2.0 + Alembic · PostgreSQL · JWT auth · 
 
 ## Status
 
-Auth (§5.1), Prescriptions (§5.2), Pharmacy pricing (§5.3), Orders (§5.4), and Payments (§5.5, Paystack) are implemented. Payments runs against Paystack's **test** API — live keys are still needed before going live (PRD §9 #3). See the PRD's §9 for what else is still open: the customer-facing medicine catalog endpoints (§5.6).
+All of §5 is implemented: Auth (§5.1), Prescriptions (§5.2), Pharmacy pricing (§5.3), Orders (§5.4), Payments (§5.5, Paystack), and the medicine catalog (§5.6, customer-facing search/metadata — management is handled via the admin panel, not separate REST endpoints). Payments runs against Paystack's **test** API — live keys are still needed before going live (PRD §9 #3).
 
 Pharmacy pricing currently runs on **seeded, synthetic data** — see "Seeding pricing data" below — since no real pharmacy/POS integration exists yet (PRD §9 #4).
 
@@ -58,7 +58,7 @@ This loads the real 549-entry Ghana NHIS medication list plus a handful of seede
 
 **Admin panel:**
 
-`/admin` (e.g. `http://localhost:8000/admin`) is a browsable admin UI (via [sqladmin](https://github.com/aminalaee/sqladmin)) for viewing and editing pharmacy/medication data. Pharmacies, the medication catalog, and pharmacy products are fully editable; Users, Prescriptions, Payment Transactions, and Admin Accounts are read-only (support/debugging visibility only — PIN hashes and password hashes are never shown, and export is disabled for User data since it's PII). Orders are mostly read-only too, except `progress` — there's no dedicated order-status API endpoint (PRD §9 #1), so this panel is the real status-update mechanism until a real ops/courier channel exists.
+`/admin` (e.g. `http://localhost:8000/admin`) is a browsable admin UI (via [sqladmin](https://github.com/aminalaee/sqladmin)) for viewing and editing pharmacy/medication data. Pharmacies, the medication catalog (with real dropdowns for type/form/dosage-unit, backed by their own small lookup tables), and pharmacy products are fully editable; Users, Prescriptions, Payment Transactions, and Admin Accounts are read-only (support/debugging visibility only — PIN hashes and password hashes are never shown, and export is disabled for User data since it's PII). Orders are mostly read-only too, except `progress` — there's no dedicated order-status API endpoint (PRD §9 #1), so this panel is the real status-update mechanism until a real ops/courier channel exists.
 
 Login is per-person, not a shared password — there's no self-signup, so create the first account via the CLI:
 
