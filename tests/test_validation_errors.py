@@ -8,7 +8,7 @@ async def test_bad_phone_number_format_gives_specific_message(client: AsyncClien
     resp = await client.post("/v1/auth/otp/request", json={"phone_number": "233244245902"})
     assert resp.status_code == 422
     assert resp.json() == {
-        "message": "Phone number must be in international format, e.g. +233244245902."
+        "message": "Phone number must be in international format, e.g. +233XXXXXXXXX."
     }
 
 
