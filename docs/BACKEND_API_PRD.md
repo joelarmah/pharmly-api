@@ -82,8 +82,9 @@ Every flow below matches `lib/features/auth/data/auth_repository.dart` exactly.
 ```json
 // Request
 { "phone_number": "+233241234567" }
-// Response: 204 No Content (or 200 {})
+// Response: 204 No Content
 ```
+**Errors**: `429` ("Please wait before requesting another code." — cooldown; or "Too many code requests. Please try again later." — hourly cap), matching §4.5's rate limits.
 
 **`POST /auth/otp/verify`** — check the code the user typed.
 ```json
@@ -92,7 +93,7 @@ Every flow below matches `lib/features/auth/data/auth_repository.dart` exactly.
 // Response 200
 { "verification_token": "short-lived-opaque-or-jwt-string" }
 ```
-`verification_token` authorizes the *next* step (register / reset PIN) without re-sending the OTP. Recommend a short-lived (~10 min) signed JWT scoped to that one phone number + purpose (`signup` vs `forgot_pin`), so `POST /auth/register` / `POST /auth/pin/reset` can validate it stayed for the same phone number and hasn't been reused past its purpose.
+`verification_token` authorizes the *next* step (register / reset PIN) without re-sending the OTP. **Implemented**: a short-lived (10 min) signed JWT scoped to that one phone number + purpose (`signup` vs `forgot_pin`) — the client's request shape has no explicit purpose field, so purpose is inferred server-side (`forgot_pin` if the phone number already has an account, `signup` otherwise), then validated by `POST /auth/register` / `POST /auth/pin/reset` against their own expected purpose. **Errors**: `400` ("That code is incorrect or has expired.") on a wrong or expired code.
 
 **`POST /auth/register`** — final step of Sign Up (after "Your Details" + "Create PIN").
 ```json
@@ -119,7 +120,7 @@ Every flow below matches `lib/features/auth/data/auth_repository.dart` exactly.
   }
 }
 ```
-`membership_activated_at` drives the "Membership active" badge on Home — set it at registration.
+`membership_activated_at` drives the "Membership active" badge on Home — set it at registration. **Errors**: `401` if `verification_token` is invalid/expired/wrong-purpose or doesn't match the submitted `phone_number`; `409` if an account already exists for that phone number.
 
 **`POST /auth/pin/reset`** — Forgot PIN's final step.
 ```json
@@ -127,29 +128,31 @@ Every flow below matches `lib/features/auth/data/auth_repository.dart` exactly.
 { "verification_token": "...", "pin": "123456" }
 // Response 200 — same shape as /auth/register's response
 ```
-Note: the client sends `phone_number` too in some cases (see repository source) — accept it but the phone number should really come from the validated `verification_token`, not be trusted from the request body alone.
+Note: the client sends `phone_number` too in some cases (see repository source) — accept it but the phone number should really come from the validated `verification_token`, not be trusted from the request body alone. **Errors**: `401` on an invalid/expired/wrong-purpose token; `404` ("No account found for this phone number") if the token's phone number has no account — shouldn't normally happen mid-flow, but possible if the account was deleted between requesting the reset OTP and submitting the new PIN.
 
 **`POST /auth/login`**
 ```json
 // Request
 { "phone_number": "+233241234567", "pin": "123456" }
 // Response 200 — same session shape as above
-// Response 401 on wrong PIN — { "message": "PIN doesn't match. Please try again." }
+// Response 401 on wrong PIN (or an unknown phone_number -- deliberately the same message either way, doesn't reveal whether an account exists) — { "message": "PIN doesn't match. Please try again." }
 ```
+**Implemented**: 5 consecutive wrong-PIN attempts locks the account for 15 minutes — further attempts (even a correct PIN) get `423` (`{"message": "Too many incorrect attempts. Please try again later."}`) until the lockout expires. A successful login resets the failure count. Shared by `POST /auth/login`, `POST /auth/pin/verify`, and `POST /auth/pin/change`'s current-PIN check — same lockout state (`User.pin_failed_attempts`/`.pin_locked_until`), not tracked per-endpoint.
 
 **`POST /auth/pin/verify`** — Change PIN step 1: check the *current* PIN before letting the user pick a new one.
 ```json
 // Request
 { "phone_number": "+233241234567", "pin": "123456" }
-// Response 200 {} on success, 401 with a message on mismatch
+// Response 200 {} on success, 401 with a message on mismatch, 423 if locked out (see /auth/login)
 ```
 
 **`POST /auth/pin/change`** — authenticated (Bearer token required).
 ```json
 // Request
 { "phone_number": "+233241234567", "current_pin": "123456", "new_pin": "654321" }
-// Response 200 — same session shape (may just return the user, tokens optional if you don't rotate on PIN change)
+// Response 200 — full session shape (access_token/refresh_token/user), same as /auth/register
 ```
+**Implemented:** rotates both tokens (does not just return the user). `phone_number` in the body must match the authenticated caller's own phone number — `403` otherwise, not `401`.
 
 **`POST /auth/token/refresh`** *(new — not yet called by the client, see §4.2)*
 ```json
@@ -158,6 +161,7 @@ Note: the client sends `phone_number` too in some cases (see repository source) 
 // Response 200
 { "access_token": "...", "refresh_token": "..." }
 ```
+**Implemented**: single-use/rotating — each call revokes the submitted refresh token and issues a new one. Reusing an already-used (or unknown/revoked/expired) refresh token is `401` ("Session expired. Please log in again.") — the client should treat that as "force re-login," not retry.
 
 **`GET /me`** *(new — not yet called by the client; currently the app just caches whatever `register`/`login` returned)*
 ```json
@@ -173,6 +177,12 @@ Add this so a reinstalled app / cleared cache can restore the profile instead of
 ```
 
 **`POST /auth/logout`** *(new, optional but recommended)* — revoke the refresh token server-side. The client currently just clears its local tokens; add this so a stolen refresh token can be invalidated.
+```json
+// Request (authenticated -- Bearer token required, same as PATCH /me)
+{ "refresh_token": "..." }
+// Response 204 No Content
+```
+The token being revoked must belong to the authenticated caller (looked up by `user_id` + hash, not just by the raw token) — revoking someone else's token isn't possible by construction. Revoking an already-revoked or unknown token is a silent no-op, not an error.
 
 **`DELETE /me`** *(new — the Account screen's "Delete Account" button exists in the UI today but is a complete no-op client-side; it needs a real endpoint before that button can do anything, and both Apple's and Google's app store guidelines require a working account-deletion path for apps that support creating one)*.
 ```json
@@ -221,7 +231,9 @@ Response 201 — a `Prescription`:
   "submitted_at": "2026-09-16T12:00:00Z"
 }
 ```
-`status` is one of `draft | submitted | priced | ordered` (only the server ever sets `priced`/`ordered`, driven by later steps in this same flow, if you choose to track prescription state that way — the mobile client does not currently drive this transition itself).
+`status` is one of `draft | submitted | priced | ordered`. **Implemented**: only `submitted` (set here, at creation) and `ordered` (set by `POST /orders` once an order is placed for this prescription — see §5.4) are actually ever set. `draft` and `priced` are reserved PRD values with no code path that sets them today — there's no "save without submitting" flow, and `POST /orders/pricing` (§5.3) doesn't mutate `Prescription.status`. Don't build UI that expects to ever see those two values from this backend.
+
+**Errors**: `422` if `medications` isn't valid JSON matching the schema above, or is an empty array (at least one medication is required).
 
 **`GET /prescriptions`** *(already implemented client-side as `fetchAll`, unused by any screen yet but present in the repository)* — returns the signed-in user's prescription history as a JSON array of the `Prescription` shape above.
 
@@ -232,9 +244,16 @@ Response 201 — a `Prescription`:
 This is the biggest *new* domain — there is no existing pharmacy/inventory model to reverse-engineer from mocks, because the mock just returns 3 hardcoded offers regardless of input. You're building this from scratch; the only fixed constraint is the **response shape** the client already parses.
 
 **`POST /orders/pricing`**
+
+**`singleLine`** — one bundled quote per pharmacy for the whole prescription:
 ```json
 // Request
-{ "prescription_id": "PR123456", "order_type": "singleLine" }  // or "multiLine"
+{
+  "prescription_id": "PR123456",
+  "order_type": "singleLine",
+  "latitude": 5.6037,     // optional -- see below
+  "longitude": -0.1870    // optional -- see below
+}
 // Response 200 — array of PharmacyOffer
 [
   {
@@ -249,11 +268,38 @@ This is the biggest *new* domain — there is no existing pharmacy/inventory mod
   }
 ]
 ```
-`rating`, `distance_km`, `eta_minutes` are optional (nullable) — the client already handles their absence. `currency` defaults to `"GHS"` client-side if omitted, but send it explicitly.
+`rating`, `distance_km`, `eta_minutes` are optional (nullable) — the client already handles their absence. `currency` defaults to `"GHS"` client-side if omitted, but send it explicitly. **`latitude`/`longitude` are not in the original mock's request shape** — added so `distance_km`/`eta_minutes` can actually be computed (straight-line haversine distance from the customer to each pharmacy, plus a fixed prep-time + average-speed ETA estimate — no real routing/traffic data). The mobile app already collects device location elsewhere in the app; without these two fields, `distance_km`/`eta_minutes` are always `null` in the response. Flag this to the mobile team as a small addition to the pricing call, not a breaking change (both fields are optional).
+
+**`multiLine`** — **implemented for real, not deferred as originally scoped** (see §8): the prescription is split apart, each medication gets quoted separately, and different pharmacies can win different line items — the client composes the final order from these, it isn't auto-split server-side:
+```json
+// Request
+{ "prescription_id": "PR123456", "order_type": "multiLine", "latitude": 5.6037, "longitude": -0.1870 }
+// Response 200 — array of MedicationPricingLine, one per submitted medication
+[
+  {
+    "medication_id": "med_1",
+    "name": "Amoxicillin",
+    "dosage": "500",
+    "dosage_unit": "mg",
+    "quantity": 21,
+    "offers": [
+      {
+        "pharmacy_id": "ph_1",
+        "pharmacy_name": "Ernest Chemists - Spintex",
+        "unit_price": 2.0,
+        "subtotal": 42.0,
+        "currency": "GHS",
+        "rating": 4.8,
+        "distance_km": 0.8,
+        "eta_minutes": 25
+      }
+    ]
+  }
+]
+```
+`offers` is sorted cheapest-first and is `[]` (not omitted) when no pharmacy carries that medication or it isn't in the catalog — a medication with zero offers doesn't remove it from the response array.
 
 **Needed supporting data model (your design call):** a `Pharmacy` entity (id, name, location, rating) and some form of per-medication price list / inventory per pharmacy, so pricing can be computed from the submitted prescription's actual medications rather than hardcoded. Minimum viable: a manually-maintained price table per partner pharmacy; `distance_km` computed from the customer's delivery address (geocoded) to each pharmacy's location.
-
-`order_type`: `singleLine` = one combined quote across all medications from a single pharmacy; `multiLine` = (per the mock's comment) a separate quote per medication — if `multiLine` support is deferred, at minimum don't error on it; treat it the same as `singleLine` until real multi-pharmacy splitting is built, and flag this to the product owner.
 
 **Confirmed architecture (resolves part of §9 open question #4):** `pharmacy_products` (a pharmacy's listing of a catalog medication — price, stock, provenance; named "products" rather than "prices" since each row is a real inventory listing, not just a number) is always a **local cache** — `POST /orders/pricing` reads from our own database, never from a partner pharmacy live, so a burst of pricing requests never hits a partner's servers directly. Pharmacies onboard one of two ways, tracked on `Pharmacy.inventory_source` and per-row on `PharmacyProduct.source`:
 - **`manual`** — an ops person enters/corrects prices directly via the admin panel (`/admin`, `app/admin.py`). This is the only *implemented* onboarding path today.
@@ -281,7 +327,9 @@ Matches `lib/features/orders/data/orders_repository.dart` + the new order-histor
 ```
 **Implemented, idempotent on `prescription_id` alone** (resolves the "prescription_id + pharmacy_id, or an idempotency key" question this section originally posed): a `Prescription` can only ever produce one `Order` — enforced with a DB unique constraint on `orders.prescription_id`, matching `Prescription.status`'s existing `ordered` terminal state and real pharmacy fulfillment (a script gets filled once). A retry of `POST /orders` — same request, or even a different `pharmacy_id` — returns the order that already exists rather than erroring or duplicating. This doesn't limit how often a user orders overall: each submitted prescription is a separate row with its own id, so a user places as many orders as they submit prescriptions for.
 
-`total` is always computed server-side from `PharmacyProduct` prices at placement time — never trusted from the client. `payment_reference` (for `card`/`mobileMoney`) is accepted and stored as given; it is **not yet verified against Paystack** (§5.5 isn't built) — flagged here rather than silently trusted.
+`total` is always computed server-side from `PharmacyProduct` prices at placement time — never trusted from the client. **`payment_reference` is verified** for `card`/`mobileMoney` orders (§5.5 is built) — see the design notes at the end of §5.5 for exactly what that checks.
+
+**Errors**: `404` if `prescription_id` doesn't exist/isn't the caller's, or if `pharmacy_id` doesn't exist. `422` if any submitted medication isn't in the catalog, if the chosen pharmacy doesn't stock a matched medication, or (card/mobileMoney only) if `payment_reference` is missing/not found/not yet successful/doesn't cover the total (see §5.5).
 
 **`GET /orders`** — the signed-in user's order history, newest first. Response: array of:
 ```json
@@ -296,7 +344,7 @@ Matches `lib/features/orders/data/orders_repository.dart` + the new order-histor
 ```
 **Resolved (§9 open question #5):** `date_label` (a pre-formatted display string) is replaced with a raw `placed_at` ISO timestamp. The mock's exact strings (e.g. "Arrives Jul 7, by 11:15 AM") need a real delivery ETA this backend doesn't track — rather than approximate that, the mobile team formats `placed_at` client-side.
 
-**`GET /orders/{id}`** — single order detail (same shape as above; used by "Buy Again" on a past order).
+**`GET /orders/{id}`** — single order detail (same shape as above; used by "Buy Again" on a past order). `404` if the order doesn't exist or isn't the caller's.
 
 **`PATCH /orders/{id}/status`** — **not built.** Its caller was an open question this section flagged (§9 #1) and remains unresolved — no ops/courier channel exists to call it. Rather than expose a public HTTP endpoint with nothing real to call it, `Order.progress` is updated via the admin panel (`/admin`) instead, the one real "ops channel" that exists today. A dedicated endpoint is straightforward to add once an actual courier/ops system needs to call it — this is a deliberate deviation from this section's original "expose the endpoint anyway" instruction, not an oversight.
 
@@ -356,6 +404,7 @@ The client **polls this in a loop** (every ~1.5s) showing a "Confirming Payment"
     "next_cursor": null
   }
   ```
+  **Implemented**: `search` is optional (omit it to page through the whole catalog); `limit` defaults to 20, max 100; `cursor` is an opaque string — always pass back exactly what `next_cursor` returned, never construct one client-side. `next_cursor` is `null` on the last page. `422` on a malformed `cursor`.
 - **`GET /medications/catalog/metadata`** — the fixed dropdown option lists (medicine "type" and dosage "unit"), so these can also change without an app release:
   ```json
   { "types": ["pills", "injection", "liquid", "topical", "drops", "suppository", "inhaler", "powder", "other"],
@@ -403,7 +452,7 @@ The client **polls this in a loop** (every ~1.5s) showing a "Confirming Payment"
 - Sync endpoints for Health Profile, My Medications, prescription/order history, and Notifications — all already fully functional as on-device SQLite. Only revisit if multi-device sync becomes a real product requirement.
 - Push notifications (FCM/APNs) — the in-app feed works locally today.
 - Live courier GPS / WebSocket tracking.
-- Multi-pharmacy order splitting for `multiLine` order type (see §5.3).
+- ~~Multi-pharmacy order splitting for `multiLine` order type~~ — **built** (see §5.3), not deferred after all: the user explicitly asked for real per-medication splitting rather than aliasing it to `singleLine` as originally scoped here.
 
 ## 9. Open questions for the product owner (not this backend team to decide)
 
