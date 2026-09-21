@@ -34,7 +34,7 @@ async def _auth_headers(client: AsyncClient, fake_sms: FakeSmsSender, phone: str
 
 async def _submit_prescription(client: AsyncClient, headers: dict, medications: list[dict]) -> dict:
     resp = await client.post(
-        "/prescriptions/submit",
+        "/v1/prescriptions/submit",
         data={"medications": json.dumps(medications)},
         headers=headers,
     )
@@ -79,7 +79,7 @@ async def _add_price(
 
 async def test_pricing_requires_auth(client: AsyncClient) -> None:
     resp = await client.post(
-        "/orders/pricing", json={"prescription_id": "PR123", "order_type": "singleLine"}
+        "/v1/orders/pricing", json={"prescription_id": "PR123", "order_type": "singleLine"}
     )
     assert resp.status_code == 401
 
@@ -92,7 +92,7 @@ async def test_pricing_404_on_someone_elses_prescription(
 
     headers_b = await _auth_headers(client, fake_sms, "+233242222222")
     resp = await client.post(
-        "/orders/pricing",
+        "/v1/orders/pricing",
         json={"prescription_id": prescription["id"], "order_type": "singleLine"},
         headers=headers_b,
     )
@@ -112,7 +112,7 @@ async def test_single_line_happy_path_sorted_by_price(
     await _add_price(db_session, "ph_pricey", catalog.id, 5.0)
 
     resp = await client.post(
-        "/orders/pricing",
+        "/v1/orders/pricing",
         json={"prescription_id": prescription["id"], "order_type": "singleLine"},
         headers=headers,
     )
@@ -141,7 +141,7 @@ async def test_single_line_partial_stock(
     await _add_price(db_session, "ph_partial", catalog_a.id, 2.0)
 
     resp = await client.post(
-        "/orders/pricing",
+        "/v1/orders/pricing",
         json={"prescription_id": prescription["id"], "order_type": "singleLine"},
         headers=headers,
     )
@@ -165,7 +165,7 @@ async def test_single_line_excludes_pharmacy_with_no_matching_items(
     await _add_price(db_session, "ph_has_it", catalog.id, 2.0)
 
     resp = await client.post(
-        "/orders/pricing",
+        "/v1/orders/pricing",
         json={"prescription_id": prescription["id"], "order_type": "singleLine"},
         headers=headers,
     )
@@ -182,7 +182,7 @@ async def test_single_line_no_catalog_match_returns_empty(
     # No catalog entry seeded at all.
 
     resp = await client.post(
-        "/orders/pricing",
+        "/v1/orders/pricing",
         json={"prescription_id": prescription["id"], "order_type": "singleLine"},
         headers=headers,
     )
@@ -201,7 +201,7 @@ async def test_single_line_computes_distance_and_eta_when_coordinates_sent(
     await _add_price(db_session, "ph_1", catalog.id, 2.0)
 
     resp = await client.post(
-        "/orders/pricing",
+        "/v1/orders/pricing",
         json={
             "prescription_id": prescription["id"],
             "order_type": "singleLine",
@@ -231,7 +231,7 @@ async def test_multi_line_different_pharmacies_win_different_medications(
     await _add_price(db_session, "ph_b_only", catalog_b.id, 1.0)
 
     resp = await client.post(
-        "/orders/pricing",
+        "/v1/orders/pricing",
         json={"prescription_id": prescription["id"], "order_type": "multiLine"},
         headers=headers,
     )
@@ -253,7 +253,7 @@ async def test_multi_line_medication_with_no_pharmacy_has_empty_offers(
     # Catalog entry exists but no pharmacy carries it.
 
     resp = await client.post(
-        "/orders/pricing",
+        "/v1/orders/pricing",
         json={"prescription_id": prescription["id"], "order_type": "multiLine"},
         headers=headers,
     )
@@ -276,7 +276,7 @@ async def test_multi_line_offers_sorted_by_unit_price(
     await _add_price(db_session, "ph_cheap", catalog.id, 1.0)
 
     resp = await client.post(
-        "/orders/pricing",
+        "/v1/orders/pricing",
         json={"prescription_id": prescription["id"], "order_type": "multiLine"},
         headers=headers,
     )

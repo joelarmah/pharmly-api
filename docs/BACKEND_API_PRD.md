@@ -40,6 +40,8 @@ Most endpoints below have a **1:1 mapping to an existing client-side mock** (see
 ### 4.1 Base URL & environments
 The client is already built for this — see `lib/core/config/env.dart`. It calls whatever `API_BASE_URL` is passed via `--dart-define` at build time (`https://api-dev.pharmly.app/v1` is the current default). Stand up matching **dev / staging / prod** environments; no code change needed on the client to point at a real host once one exists.
 
+**Implemented:** every endpoint path in this document is mounted under `/v1` on the server (`app/main.py`), matching the client's base URL above — `POST /auth/otp/request` is actually served at `POST /v1/auth/otp/request`, and so on for every path in §5. `/health`, `/docs`, `/admin`, and `/uploads` are infra/tooling routes, not versioned API surface, and stay unprefixed. Local dev: `http://localhost:8000/v1/...`.
+
 ### 4.2 Auth scheme
 - **JWT access + refresh tokens.** Every authenticated endpoint expects `Authorization: Bearer <access_token>`.
 - Access tokens: short-lived (recommend 15–30 min). Refresh tokens: long-lived (recommend 30 days), single-use or rotating.
