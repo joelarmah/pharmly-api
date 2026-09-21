@@ -33,7 +33,7 @@ Most endpoints below have a **1:1 mapping to an existing client-side mock** (see
 |---|---|
 | **Customer** | The Flutter mobile app — everything in §5. |
 | **Payment gateway (Paystack)** | Server-to-server: this backend calls Paystack's API to initialize/verify transactions, and should verify Paystack's webhook. |
-| **Ops/pharmacy/courier** | Not specified by this PRD — *something* needs to call `PATCH /orders/{id}/status` when a real order's state changes. Flag this as an open question for the product owner (§9). |
+| **Ops/pharmacy/courier** | Not specified by this PRD. No dedicated `PATCH /orders/{id}/status` endpoint exists (§5.4) — `Order.progress` is updated via the admin panel for now, until a real ops/courier channel exists to justify a public endpoint (§9). |
 
 ## 4. Cross-cutting requirements
 
@@ -279,7 +279,9 @@ Matches `lib/features/orders/data/orders_repository.dart` + the new order-histor
 // Response 201
 { "order_id": "PR151528" }
 ```
-Make this idempotent on `prescription_id` + `pharmacy_id` (or an explicit client idempotency key) — a client-side retry after a timeout must not create two orders.
+**Implemented, idempotent on `prescription_id` alone** (resolves the "prescription_id + pharmacy_id, or an idempotency key" question this section originally posed): a `Prescription` can only ever produce one `Order` — enforced with a DB unique constraint on `orders.prescription_id`, matching `Prescription.status`'s existing `ordered` terminal state and real pharmacy fulfillment (a script gets filled once). A retry of `POST /orders` — same request, or even a different `pharmacy_id` — returns the order that already exists rather than erroring or duplicating. This doesn't limit how often a user orders overall: each submitted prescription is a separate row with its own id, so a user places as many orders as they submit prescriptions for.
+
+`total` is always computed server-side from `PharmacyProduct` prices at placement time — never trusted from the client. `payment_reference` (for `card`/`mobileMoney`) is accepted and stored as given; it is **not yet verified against Paystack** (§5.5 isn't built) — flagged here rather than silently trusted.
 
 **`GET /orders`** — the signed-in user's order history, newest first. Response: array of:
 ```json
@@ -288,21 +290,15 @@ Make this idempotent on `prescription_id` + `pharmacy_id` (or an explicit client
   "pharmacy_name": "Ernest Chemists - Spintex",
   "items_label": "Cataflam, Amoxicillin · 2 items",
   "progress": "preparing",                 // "preparing" | "onTheWay" | "delivered"
-  "date_label": "Placed just now",         // human-readable, server-formatted
+  "placed_at": "2026-09-21T17:33:32.940907",
   "total": 403.14
 }
 ```
-`date_label` is a **pre-formatted display string**, not a raw timestamp — the client renders it as-is (e.g. "Arrives Jul 7, by 11:15 AM" while preparing/on the way, "Jun 28 · GHS 403.14" once delivered). Format it server-side to match that pattern, or switch to sending a raw ISO timestamp + let the mobile team move the formatting client-side — **flag this as a decision point** (§9) since it's currently baked into the mock.
+**Resolved (§9 open question #5):** `date_label` (a pre-formatted display string) is replaced with a raw `placed_at` ISO timestamp. The mock's exact strings (e.g. "Arrives Jul 7, by 11:15 AM") need a real delivery ETA this backend doesn't track — rather than approximate that, the mobile team formats `placed_at` client-side.
 
 **`GET /orders/{id}`** — single order detail (same shape as above; used by "Buy Again" on a past order).
 
-**`PATCH /orders/{id}/status`** *(new — needed to make order tracking real; not called by the mobile client itself)* — called by whatever ops/courier channel exists (see §3, §9):
-```json
-// Request
-{ "progress": "onTheWay" }
-// Response 200 — the updated order
-```
-This is what makes `TrackOrderScreen`'s delivery timeline and the courier contact card (currently a static placeholder name once `progress != preparing`, per the mobile app's current implementation) actually reflect reality instead of always sitting at `preparing` forever, which is the state every order is stuck in today with no backend driving it forward.
+**`PATCH /orders/{id}/status`** — **not built.** Its caller was an open question this section flagged (§9 #1) and remains unresolved — no ops/courier channel exists to call it. Rather than expose a public HTTP endpoint with nothing real to call it, `Order.progress` is updated via the admin panel (`/admin`) instead, the one real "ops channel" that exists today. A dedicated endpoint is straightforward to add once an actual courier/ops system needs to call it — this is a deliberate deviation from this section's original "expose the endpoint anyway" instruction, not an oversight.
 
 ---
 
@@ -383,7 +379,7 @@ The client **polls this in a loop** (every ~1.5s) showing a "Confirming Payment"
 | `pharmacies` | id, name, location (lat/lng), rating |
 | `medication_catalog` | id, name, dosage, unit, form, type, retired_at (soft-delete) |
 | `pharmacy_products` | pharmacy_id (FK), catalog_id (FK to `medication_catalog`), unit_price, stock_quantity, source, synced_at |
-| `orders` | id, user_id, prescription_id, pharmacy_id, order_type, payment_type, payment_reference, progress, total, placed_at |
+| `orders` | id, user_id, prescription_id (FK, unique -- one order per prescription), pharmacy_id (FK), payment_type, payment_reference, progress, total, placed_at |
 | `payment_transactions` | reference, order_id (nullable until order placed), amount, status, paystack_raw_response (JSON), created_at |
 
 ## 7. Non-functional requirements
@@ -403,9 +399,9 @@ The client **polls this in a loop** (every ~1.5s) showing a "Confirming Payment"
 
 ## 9. Open questions for the product owner (not this backend team to decide)
 
-1. **Who/what calls `PATCH /orders/{id}/status`?** An ops dashboard? A courier-facing app? Direct pharmacy-partner API integration? This backend should expose the endpoint; the *caller* is a separate build.
-2. **SMS provider** for OTP delivery — Twilio, Africa's Talking, or another Ghana-focused provider? Needs an account + credentials before `POST /auth/otp/request` can go live.
-3. **Paystack account** — test and live secret/public keys, and whether Mobile Money channels are enabled on the account (Ghana MTN/Vodafone/AirtelTigo).
+1. **Who/what calls order-status updates?** An ops dashboard? A courier-facing app? Direct pharmacy-partner API integration? Resolved for now: no dedicated endpoint exists, `Order.progress` is updated via the admin panel — revisit once a real caller (ops dashboard, courier app, etc.) exists, at which point a `PATCH /orders/{id}/status` endpoint is straightforward to add.
+2. **SMS provider** for OTP delivery — resolved: Arkesel (see `app/services/sms.py`).
+3. **Paystack account** — test secret key provided; live keys, and whether Mobile Money channels are enabled on the account (Ghana MTN/Vodafone/AirtelTigo), still needed before going live. Not yet wired into the app (§5.5 not built).
 4. **Pharmacy partner data** — partially decided (see §5.3): pricing always reads from our own `pharmacy_products` cache, populated either by manual ops entry (implemented, via the admin panel) or a future partner API sync (not implemented — no real partner contract/credentials exist yet, same situation Arkesel was in before real docs/keys were provided). Still open:
    - No real partner pharmacy API contract exists to build `source="partner_api"` sync against — needed before that path can be implemented at all.
    - No scheduler/background-job infrastructure exists in this codebase (confirmed: no Celery/APScheduler/cron anywhere) — a periodic partner sync needs *some* execution mechanism once a real partner exists; an admin-triggered endpoint (matching the `X-Admin-Key` precedent in §5.6) is the cheapest v1 option, a real scheduler the eventual one.
@@ -425,26 +421,26 @@ For quick cross-reference against the Flutter source (`lib/features/*/data/*_rep
 
 | Client method | Endpoint | Status |
 |---|---|---|
-| `AuthRepository.requestOtp` | `POST /auth/otp/request` | Build |
-| `AuthRepository.verifyOtp` | `POST /auth/otp/verify` | Build |
-| `AuthRepository.completeRegistration` | `POST /auth/register` | Build |
-| `AuthRepository.resetPin` | `POST /auth/pin/reset` | Build |
-| `AuthRepository.login` | `POST /auth/login` | Build |
-| `AuthRepository.verifyPin` | `POST /auth/pin/verify` | Build |
-| `AuthRepository.changePin` | `POST /auth/pin/change` | Build |
-| *(none yet — client caches locally)* | `POST /auth/token/refresh` | Build + ask mobile team to wire in |
-| *(none yet)* | `GET /me` | Build |
-| *(none yet)* | `PATCH /me` | Build |
-| *(none yet)* | `POST /auth/logout` | Build (recommended) |
-| *(none yet — "Delete Account" button is currently a no-op)* | `DELETE /me` | Build |
-| `PrescriptionsRepository.submit` | `POST /prescriptions/submit` | Build |
-| `PrescriptionsRepository.fetchAll` | `GET /prescriptions` | Build |
-| `OrdersRepository.fetchPricing` | `POST /orders/pricing` | Build (new domain, see §5.3) |
-| `OrdersRepository.placeOrder` | `POST /orders` | Build |
-| *(mobile app's local order history)* | `GET /orders`, `GET /orders/{id}` | Build |
-| *(none yet — needed to make tracking real)* | `PATCH /orders/{id}/status` | Build |
-| `PaymentGatewayRepository.initializeTransaction` | `POST /payments/paystack/initialize` | Build |
-| `PaymentGatewayRepository.verifyTransaction` | `GET /payments/paystack/verify/{reference}` | Build |
-| *(none yet — recommended)* | `POST /payments/paystack/webhook` | Build (recommended) |
-| *(currently a bundled JSON asset — client-side change needed)* | `GET /medications/catalog`, `GET /medications/catalog/metadata` | Build |
-| *(none — new management domain)* | `POST/PATCH/DELETE /medications/catalog`, `POST /medications/catalog/import` | Build |
+| `AuthRepository.requestOtp` | `POST /auth/otp/request` | Built |
+| `AuthRepository.verifyOtp` | `POST /auth/otp/verify` | Built |
+| `AuthRepository.completeRegistration` | `POST /auth/register` | Built |
+| `AuthRepository.resetPin` | `POST /auth/pin/reset` | Built |
+| `AuthRepository.login` | `POST /auth/login` | Built |
+| `AuthRepository.verifyPin` | `POST /auth/pin/verify` | Built |
+| `AuthRepository.changePin` | `POST /auth/pin/change` | Built |
+| *(none yet — client caches locally)* | `POST /auth/token/refresh` | Built + ask mobile team to wire in |
+| *(none yet)* | `GET /me` | Built |
+| *(none yet)* | `PATCH /me` | Built |
+| *(none yet)* | `POST /auth/logout` | Built |
+| *(none yet — "Delete Account" button is currently a no-op)* | `DELETE /me` | Built |
+| `PrescriptionsRepository.submit` | `POST /prescriptions/submit` | Built |
+| `PrescriptionsRepository.fetchAll` | `GET /prescriptions` | Built |
+| `OrdersRepository.fetchPricing` | `POST /orders/pricing` | Built (§5.3) |
+| `OrdersRepository.placeOrder` | `POST /orders` | Built |
+| *(mobile app's local order history)* | `GET /orders`, `GET /orders/{id}` | Built |
+| *(none yet — needed to make tracking real)* | `PATCH /orders/{id}/status` | Not built — see §9 #1 (admin panel used instead) |
+| `PaymentGatewayRepository.initializeTransaction` | `POST /payments/paystack/initialize` | Not built — blocked on live keys (§9 #3) |
+| `PaymentGatewayRepository.verifyTransaction` | `GET /payments/paystack/verify/{reference}` | Not built — blocked on live keys (§9 #3) |
+| *(none yet — recommended)* | `POST /payments/paystack/webhook` | Not built — blocked on live keys (§9 #3) |
+| *(currently a bundled JSON asset — client-side change needed)* | `GET /medications/catalog`, `GET /medications/catalog/metadata` | Not built |
+| *(none — new management domain)* | `POST/PATCH/DELETE /medications/catalog`, `POST /medications/catalog/import` | Not built — admin panel covers hand-editing today |

@@ -12,7 +12,7 @@ FastAPI · Pydantic v2 · SQLAlchemy 2.0 + Alembic · PostgreSQL · JWT auth · 
 
 ## Status
 
-Auth (§5.1), Prescriptions (§5.2), and Pharmacy pricing (§5.3) are implemented. See the PRD's §9 ("Open questions for the product owner") for decisions that need to be made before other domains (Paystack account, real pharmacy partner data, medicine catalog management) can be fully built.
+Auth (§5.1), Prescriptions (§5.2), Pharmacy pricing (§5.3), and Orders (§5.4) are implemented. See the PRD's §9 ("Open questions for the product owner") for what's still open: Paystack live keys (§5.5, not built), and the customer-facing medicine catalog endpoints (§5.6).
 
 Pharmacy pricing currently runs on **seeded, synthetic data** — see "Seeding pricing data" below — since no real pharmacy/POS integration exists yet (PRD §9 #4).
 
@@ -58,7 +58,7 @@ This loads the real 549-entry Ghana NHIS medication list plus a handful of seede
 
 **Admin panel:**
 
-`/admin` (e.g. `http://localhost:8000/admin`) is a browsable admin UI (via [sqladmin](https://github.com/aminalaee/sqladmin)) for viewing and editing pharmacy/medication data. Pharmacies, the medication catalog, and pharmacy products are fully editable; Users, Prescriptions, and Admin Accounts are read-only (support/debugging visibility only — PIN hashes and password hashes are never shown, and export is disabled for User data since it's PII).
+`/admin` (e.g. `http://localhost:8000/admin`) is a browsable admin UI (via [sqladmin](https://github.com/aminalaee/sqladmin)) for viewing and editing pharmacy/medication data. Pharmacies, the medication catalog, and pharmacy products are fully editable; Users, Prescriptions, and Admin Accounts are read-only (support/debugging visibility only — PIN hashes and password hashes are never shown, and export is disabled for User data since it's PII). Orders are mostly read-only too, except `progress` — there's no dedicated order-status API endpoint (PRD §9 #1), so this panel is the real status-update mechanism until a real ops/courier channel exists.
 
 Login is per-person, not a shared password — there's no self-signup, so create the first account via the CLI:
 
