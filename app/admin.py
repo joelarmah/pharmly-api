@@ -12,7 +12,14 @@ from app.core.time import utcnow
 from app.models.admin_user import AdminUser
 from app.models.order import Order
 from app.models.payment import PaymentTransaction
-from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyProduct
+from app.models.pharmacy import (
+    DosageUnit,
+    MedicationCatalog,
+    MedicationForm,
+    MedicationType,
+    Pharmacy,
+    PharmacyProduct,
+)
 from app.models.prescription import Medication, Prescription
 from app.models.user import User
 
@@ -78,11 +85,47 @@ class PharmacyAdmin(ModelView, model=Pharmacy):
     ]
 
 
+class MedicationTypeAdmin(ModelView, model=MedicationType):
+    name = "Medication Type"
+    name_plural = "Medication Types"
+    icon = "fa-solid fa-tags"
+    # This *is* the "add a new dropdown option without a deploy" mechanism
+    # (PRD §5.6) -- full CRUD, unlike most of this file's read-only views.
+    column_list = [MedicationType.name]
+
+
+class MedicationFormAdmin(ModelView, model=MedicationForm):
+    name = "Medication Form"
+    name_plural = "Medication Forms"
+    icon = "fa-solid fa-capsules"
+    column_list = [MedicationForm.name]
+
+
+class DosageUnitAdmin(ModelView, model=DosageUnit):
+    name = "Dosage Unit"
+    name_plural = "Dosage Units"
+    icon = "fa-solid fa-weight-scale"
+    column_list = [DosageUnit.name]
+
+
 class MedicationCatalogAdmin(ModelView, model=MedicationCatalog):
     name = "Medication"
     name_plural = "Medication Catalog"
     icon = "fa-solid fa-pills"
     column_list = [
+        MedicationCatalog.name,
+        MedicationCatalog.dosage,
+        MedicationCatalog.unit,
+        MedicationCatalog.form,
+        MedicationCatalog.type,
+        MedicationCatalog.retired_at,
+    ]
+    # type/form/unit are now FK relationships to small lookup tables (a
+    # handful of rows each) -- sqladmin renders them as plain <select>
+    # dropdowns automatically, no form_ajax_refs needed (unlike
+    # PharmacyProductAdmin's pharmacy/catalog pickers, which search
+    # hundreds of rows).
+    form_columns = [
         MedicationCatalog.name,
         MedicationCatalog.dosage,
         MedicationCatalog.unit,
@@ -262,6 +305,9 @@ def setup_admin(app: Starlette, engine: AsyncEngine) -> Admin:
     )
     for view in (
         PharmacyAdmin,
+        MedicationTypeAdmin,
+        MedicationFormAdmin,
+        DosageUnitAdmin,
         MedicationCatalogAdmin,
         PharmacyProductAdmin,
         UserAdmin,

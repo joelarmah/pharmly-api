@@ -6,7 +6,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.order import Order
 from app.models.payment import PaymentTransaction
-from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyProduct
+from app.models.pharmacy import (
+    DosageUnit,
+    MedicationCatalog,
+    MedicationForm,
+    MedicationType,
+    Pharmacy,
+    PharmacyProduct,
+)
 from tests.conftest import FakeSmsSender
 from tests.helpers import PHONE, signup
 
@@ -64,10 +71,28 @@ async def _submit_prescription(client: AsyncClient, headers: dict, medications: 
     return resp.json()
 
 
+async def _get_or_create(db_session: AsyncSession, model: type, name: str):
+    existing = (
+        await db_session.execute(select(model).where(model.name == name))
+    ).scalar_one_or_none()
+    if existing is not None:
+        return existing
+    row = model(name=name)
+    db_session.add(row)
+    await db_session.commit()
+    await db_session.refresh(row)
+    return row
+
+
 async def _add_catalog_entry(
     db_session: AsyncSession, name: str, dosage: str, unit: str = "mg", type_: str = "pills"
 ) -> MedicationCatalog:
-    entry = MedicationCatalog(name=name, dosage=dosage, unit=unit, form="tablet", type=type_)
+    unit_row = await _get_or_create(db_session, DosageUnit, unit)
+    form_row = await _get_or_create(db_session, MedicationForm, "tablet")
+    type_row = await _get_or_create(db_session, MedicationType, type_)
+    entry = MedicationCatalog(
+        name=name, dosage=dosage, unit_id=unit_row.id, form_id=form_row.id, type_id=type_row.id
+    )
     db_session.add(entry)
     await db_session.commit()
     await db_session.refresh(entry)
