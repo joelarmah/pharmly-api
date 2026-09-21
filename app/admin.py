@@ -10,6 +10,7 @@ from app.core.config import settings
 from app.core.security import verify_password
 from app.core.time import utcnow
 from app.models.admin_user import AdminUser
+from app.models.order import Order
 from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyProduct
 from app.models.prescription import Medication, Prescription
 from app.models.user import User
@@ -184,6 +185,29 @@ class MedicationLineAdmin(ModelView, model=Medication):
     ]
 
 
+class OrderAdmin(ModelView, model=Order):
+    name = "Order"
+    name_plural = "Orders"
+    icon = "fa-solid fa-cart-shopping"
+    can_create = False
+    can_delete = False
+    # The one deliberate exception to this file's read-only-admin pattern:
+    # PATCH /orders/{id}/status (PRD §5.4) isn't built -- there's no real
+    # ops/courier channel to call it yet (PRD §9 open question #1) -- so
+    # this panel is the actual status-update mechanism for now. Only
+    # progress is editable; payment/total/etc. stay fixed once placed.
+    can_edit = True
+    form_columns = [Order.progress]
+    column_list = [
+        Order.user_id,
+        Order.pharmacy,
+        Order.payment_type,
+        Order.progress,
+        Order.total,
+        Order.placed_at,
+    ]
+
+
 class AdminUserAdmin(ModelView, model=AdminUser):
     name = "Admin Account"
     name_plural = "Admin Accounts"
@@ -225,6 +249,7 @@ def setup_admin(app: Starlette, engine: AsyncEngine) -> Admin:
         UserAdmin,
         PrescriptionAdmin,
         MedicationLineAdmin,
+        OrderAdmin,
         AdminUserAdmin,
     ):
         admin.add_view(view)
