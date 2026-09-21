@@ -322,7 +322,14 @@ Server-side: call Paystack's `POST /transaction/initialize` with your **secret**
 ```
 The client **polls this in a loop** (every ~1.5s) showing a "Confirming Payment" dialog until it sees `success` or `failed` — keep this endpoint fast (cache Paystack's verify response for a few seconds server-side rather than hitting Paystack on every poll tick if traffic is a concern).
 
-**`POST /payments/paystack/webhook`** *(new — strongly recommended even though the client doesn't call it)* — Paystack calls this server-to-server when a transaction completes. **Verify the `x-paystack-signature` header (HMAC-SHA512 with your secret key)** before trusting the payload. Use this as the source of truth for marking a transaction's final status (rather than only trusting client-driven polling), and to drive `PATCH /orders/{id}/status` → `preparing` once payment is confirmed, if the order wasn't already placed synchronously.
+**`POST /payments/paystack/webhook`** *(new — strongly recommended even though the client doesn't call it)* — Paystack calls this server-to-server when a transaction completes. **Verify the `x-paystack-signature` header (HMAC-SHA512 with your secret key)** before trusting the payload. Use this as the source of truth for marking a transaction's final status (rather than only trusting client-driven polling). There is no `PATCH /orders/{id}/status` to drive (§5.4 — not built, see §9 #1); the webhook only updates `payment_transactions.status`.
+
+**Implemented — design notes:**
+- **Idempotency**: `reference` doubles as the idempotency key. A client-supplied `reference` that already has a `PaymentTransaction` row short-circuits `initialize` — returns the existing `checkout_url` instead of calling Paystack again. Omitted `reference` → server-generates one (`PSK-<uuid7>`).
+- **Verify caching**: a `verify` call within `paystack_verify_cache_seconds` (default 5) of the last check returns the cached local status instead of re-hitting Paystack.
+- **Status mapping** (Paystack's real statuses are richer than `pending | success | failed`): only Paystack's explicit `success` maps to `success`, only explicit `failed` maps to `failed`, everything else (including `abandoned`, `queued`, etc.) maps to `pending`. Verified live against the real Paystack test API: a freshly-initialized, completely untouched transaction already reports `abandoned` — mapping that to `failed` would show a false "Payment failed" to a client mid-poll while the user is still on Paystack's checkout page.
+- **Ownership**: `payment_transactions` has a `user_id` column (beyond §6's suggested table) — `verify` 404s a reference that isn't the caller's, matching every other resource in this API.
+- **`POST /orders` now actually verifies `payment_reference`** for `card`/`mobileMoney` orders (was previously accepted/stored as given): requires a `PaymentTransaction` owned by the caller, `status == "success"`, and `amount` covering the order's server-computed total — 422 otherwise. Cash orders are unaffected. `payment_transactions.order_id` is set once the order is placed.
 
 ---
 
@@ -380,7 +387,7 @@ The client **polls this in a loop** (every ~1.5s) showing a "Confirming Payment"
 | `medication_catalog` | id, name, dosage, unit, form, type, retired_at (soft-delete) |
 | `pharmacy_products` | pharmacy_id (FK), catalog_id (FK to `medication_catalog`), unit_price, stock_quantity, source, synced_at |
 | `orders` | id, user_id, prescription_id (FK, unique -- one order per prescription), pharmacy_id (FK), payment_type, payment_reference, progress, total, placed_at |
-| `payment_transactions` | reference, order_id (nullable until order placed), amount, status, paystack_raw_response (JSON), created_at |
+| `payment_transactions` | reference, user_id (FK), order_id (nullable until order placed), amount, status, paystack_raw_response (JSON), created_at, last_checked_at |
 
 ## 7. Non-functional requirements
 
@@ -401,7 +408,7 @@ The client **polls this in a loop** (every ~1.5s) showing a "Confirming Payment"
 
 1. **Who/what calls order-status updates?** An ops dashboard? A courier-facing app? Direct pharmacy-partner API integration? Resolved for now: no dedicated endpoint exists, `Order.progress` is updated via the admin panel — revisit once a real caller (ops dashboard, courier app, etc.) exists, at which point a `PATCH /orders/{id}/status` endpoint is straightforward to add.
 2. **SMS provider** for OTP delivery — resolved: Arkesel (see `app/services/sms.py`).
-3. **Paystack account** — test secret key provided; live keys, and whether Mobile Money channels are enabled on the account (Ghana MTN/Vodafone/AirtelTigo), still needed before going live. Not yet wired into the app (§5.5 not built).
+3. **Paystack account** — test secret key provided and wired in; §5.5 is now built and verified live against Paystack's test API (real `initialize`/`verify` round trips, real HMAC-SHA512 webhook signature verification). Still needed before going live: **live** keys, and whether Mobile Money channels are enabled on the account (Ghana MTN/Vodafone/AirtelTigo).
 4. **Pharmacy partner data** — partially decided (see §5.3): pricing always reads from our own `pharmacy_products` cache, populated either by manual ops entry (implemented, via the admin panel) or a future partner API sync (not implemented — no real partner contract/credentials exist yet, same situation Arkesel was in before real docs/keys were provided). Still open:
    - No real partner pharmacy API contract exists to build `source="partner_api"` sync against — needed before that path can be implemented at all.
    - No scheduler/background-job infrastructure exists in this codebase (confirmed: no Celery/APScheduler/cron anywhere) — a periodic partner sync needs *some* execution mechanism once a real partner exists; an admin-triggered endpoint (matching the `X-Admin-Key` precedent in §5.6) is the cheapest v1 option, a real scheduler the eventual one.
@@ -439,8 +446,8 @@ For quick cross-reference against the Flutter source (`lib/features/*/data/*_rep
 | `OrdersRepository.placeOrder` | `POST /orders` | Built |
 | *(mobile app's local order history)* | `GET /orders`, `GET /orders/{id}` | Built |
 | *(none yet — needed to make tracking real)* | `PATCH /orders/{id}/status` | Not built — see §9 #1 (admin panel used instead) |
-| `PaymentGatewayRepository.initializeTransaction` | `POST /payments/paystack/initialize` | Not built — blocked on live keys (§9 #3) |
-| `PaymentGatewayRepository.verifyTransaction` | `GET /payments/paystack/verify/{reference}` | Not built — blocked on live keys (§9 #3) |
-| *(none yet — recommended)* | `POST /payments/paystack/webhook` | Not built — blocked on live keys (§9 #3) |
+| `PaymentGatewayRepository.initializeTransaction` | `POST /payments/paystack/initialize` | Built (test keys; live keys still needed, §9 #3) |
+| `PaymentGatewayRepository.verifyTransaction` | `GET /payments/paystack/verify/{reference}` | Built (test keys; live keys still needed, §9 #3) |
+| *(none yet — recommended)* | `POST /payments/paystack/webhook` | Built (test keys; live keys still needed, §9 #3) |
 | *(currently a bundled JSON asset — client-side change needed)* | `GET /medications/catalog`, `GET /medications/catalog/metadata` | Not built |
 | *(none — new management domain)* | `POST/PATCH/DELETE /medications/catalog`, `POST /medications/catalog/import` | Not built — admin panel covers hand-editing today |

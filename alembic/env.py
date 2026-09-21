@@ -12,6 +12,7 @@ from app.models import (  # noqa: F401
     admin_user,
     order,
     otp,
+    payment,
     pharmacy,
     prescription,
     refresh_token,

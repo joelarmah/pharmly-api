@@ -11,6 +11,7 @@ from app.core.security import verify_password
 from app.core.time import utcnow
 from app.models.admin_user import AdminUser
 from app.models.order import Order
+from app.models.payment import PaymentTransaction
 from app.models.pharmacy import MedicationCatalog, Pharmacy, PharmacyProduct
 from app.models.prescription import Medication, Prescription
 from app.models.user import User
@@ -208,6 +209,23 @@ class OrderAdmin(ModelView, model=Order):
     ]
 
 
+class PaymentTransactionAdmin(ModelView, model=PaymentTransaction):
+    name = "Payment Transaction"
+    name_plural = "Payment Transactions"
+    icon = "fa-solid fa-money-check-dollar"
+    can_create = False
+    can_edit = False
+    can_delete = False
+    column_list = [
+        PaymentTransaction.reference,
+        PaymentTransaction.user_id,
+        PaymentTransaction.order,
+        PaymentTransaction.amount,
+        PaymentTransaction.status,
+        PaymentTransaction.created_at,
+    ]
+
+
 class AdminUserAdmin(ModelView, model=AdminUser):
     name = "Admin Account"
     name_plural = "Admin Accounts"
@@ -250,6 +268,7 @@ def setup_admin(app: Starlette, engine: AsyncEngine) -> Admin:
         PrescriptionAdmin,
         MedicationLineAdmin,
         OrderAdmin,
+        PaymentTransactionAdmin,
         AdminUserAdmin,
     ):
         admin.add_view(view)

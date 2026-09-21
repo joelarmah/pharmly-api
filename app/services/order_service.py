@@ -6,6 +6,7 @@ from sqlalchemy.orm import selectinload
 
 from app.core.exceptions import ApiError
 from app.models.order import Order
+from app.models.payment import PaymentTransaction
 from app.models.pharmacy import Pharmacy, PharmacyProduct
 from app.models.prescription import Medication, Prescription
 from app.schemas.orders import OrderOut, PlaceOrderRequest
@@ -88,6 +89,35 @@ async def place_order(db: AsyncSession, user_id: str, payload: PlaceOrderRequest
                 f"'{pharmacy.name}' doesn't stock '{med.name}'.",
             )
         total += med.quantity * product.unit_price
+    total = round(total, 2)
+
+    # Cash orders never touch Payments; card/mobileMoney must point at an
+    # already-successful transaction that actually covers the total --
+    # payment_reference is never just trusted as a bare string.
+    payment_transaction: PaymentTransaction | None = None
+    if payload.payment_type != "cashOnDelivery":
+        if not payload.payment_reference:
+            raise ApiError(
+                status.HTTP_422_UNPROCESSABLE_CONTENT,
+                "payment_reference is required for card/mobileMoney orders.",
+            )
+        payment_transaction = (
+            await db.execute(
+                select(PaymentTransaction).where(
+                    PaymentTransaction.reference == payload.payment_reference,
+                    PaymentTransaction.user_id == user_id,
+                )
+            )
+        ).scalar_one_or_none()
+        if payment_transaction is None:
+            raise ApiError(status.HTTP_422_UNPROCESSABLE_CONTENT, "Payment reference not found.")
+        if payment_transaction.status != "success":
+            raise ApiError(status.HTTP_422_UNPROCESSABLE_CONTENT, "Payment has not succeeded.")
+        if payment_transaction.amount < total:
+            raise ApiError(
+                status.HTTP_422_UNPROCESSABLE_CONTENT,
+                "Payment amount does not cover the order total.",
+            )
 
     order = Order(
         user_id=user_id,
@@ -95,10 +125,13 @@ async def place_order(db: AsyncSession, user_id: str, payload: PlaceOrderRequest
         pharmacy_id=pharmacy.id,
         payment_type=payload.payment_type,
         payment_reference=payload.payment_reference,
-        total=round(total, 2),
+        total=total,
     )
     prescription.status = "ordered"
     db.add(order)
+    if payment_transaction is not None:
+        await db.flush()  # populates order.id via its Python-side default
+        payment_transaction.order_id = order.id
     try:
         await db.commit()
     except IntegrityError:

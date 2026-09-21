@@ -6,7 +6,7 @@ from starlette.responses import HTMLResponse
 from starlette.staticfiles import StaticFiles
 
 from app.admin import setup_admin
-from app.api.v1 import auth, me, orders, prescriptions
+from app.api.v1 import auth, me, orders, payments, prescriptions
 from app.core.config import settings
 from app.core.exceptions import install_exception_handlers
 from app.db.session import engine
@@ -42,6 +42,7 @@ app.include_router(auth.router, prefix=API_V1_PREFIX)
 app.include_router(me.router, prefix=API_V1_PREFIX)
 app.include_router(prescriptions.router, prefix=API_V1_PREFIX)
 app.include_router(orders.router, prefix=API_V1_PREFIX)
+app.include_router(payments.router, prefix=API_V1_PREFIX)
 
 app.mount(
     "/uploads", StaticFiles(directory=settings.local_storage_dir, check_dir=False), name="uploads"
