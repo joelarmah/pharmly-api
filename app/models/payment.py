@@ -20,9 +20,14 @@ class PaymentTransaction(Base):
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
     reference: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True, nullable=False)
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    # ondelete="CASCADE" here too, same reasoning as Order.prescription_id --
+    # user_id and (transitively) order_id both cascade independently from a
+    # User delete, with no guaranteed ordering between the paths.
     order_id: Mapped[str | None] = mapped_column(
-        ForeignKey("orders.id"), index=True, nullable=True
+        ForeignKey("orders.id", ondelete="CASCADE"), index=True, nullable=True
     )
     # GHS major units, matching Order.total's convention -- the pesewas
     # (x100) conversion happens only when actually calling Paystack.

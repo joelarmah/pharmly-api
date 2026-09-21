@@ -2,6 +2,7 @@ from collections.abc import AsyncGenerator
 
 import pytest
 from httpx import ASGITransport, AsyncClient
+from sqlalchemy import event
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import StaticPool
 
@@ -42,6 +43,16 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
         connect_args={"check_same_thread": False},
         poolclass=StaticPool,
     )
+
+    # SQLite ignores foreign key constraints by default -- without this,
+    # tests would never catch a missing/wrong ON DELETE CASCADE (this is
+    # exactly how the original DELETE /me bug shipped unnoticed: the test
+    # suite passed against SQLite while the same code 500'd against real
+    # Postgres for every single user).
+    @event.listens_for(engine.sync_engine, "connect")
+    def _enable_sqlite_fk(dbapi_connection, connection_record) -> None:
+        dbapi_connection.execute("PRAGMA foreign_keys=ON")
+
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 

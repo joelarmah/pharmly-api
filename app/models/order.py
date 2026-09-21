@@ -20,9 +20,18 @@ class Order(Base):
     __tablename__ = "orders"
 
     id: Mapped[str] = mapped_column(String, primary_key=True, default=generate_id)
-    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), index=True, nullable=False)
+    user_id: Mapped[str] = mapped_column(
+        ForeignKey("users.id", ondelete="CASCADE"), index=True, nullable=False
+    )
+    # ondelete="CASCADE" here too (not just on user_id) -- prescriptions.
+    # user_id and orders.user_id both cascade independently from a User
+    # delete, with no guaranteed ordering between the two cascade paths;
+    # without this, Postgres could delete the prescription before the
+    # order that references it and raise a FK violation anyway. An order
+    # can't outlive its prescription regardless of *why* it's being
+    # deleted, so this is the correct constraint on its own merits too.
     prescription_id: Mapped[str] = mapped_column(
-        ForeignKey("prescriptions.id"), unique=True, index=True, nullable=False
+        ForeignKey("prescriptions.id", ondelete="CASCADE"), unique=True, index=True, nullable=False
     )
     pharmacy_id: Mapped[str] = mapped_column(
         ForeignKey("pharmacies.id"), index=True, nullable=False
