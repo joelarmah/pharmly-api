@@ -31,10 +31,17 @@ async def api_docs() -> HTMLResponse:
         openapi_url=app.openapi_url, title=app.title, telemetry=False
     )
 
-app.include_router(auth.router)
-app.include_router(me.router)
-app.include_router(prescriptions.router)
-app.include_router(orders.router)
+# Matches the client's base URL, which already bakes /v1 in (PRD §4.1:
+# API_BASE_URL defaults to "https://api-dev.pharmly.app/v1") -- every path
+# documented in the PRD is relative to that, so this was always meant to
+# be here rather than a new deviation. /health, /docs, /admin, /uploads
+# are infra/tooling, not versioned API surface, so they stay unprefixed.
+API_V1_PREFIX = "/v1"
+
+app.include_router(auth.router, prefix=API_V1_PREFIX)
+app.include_router(me.router, prefix=API_V1_PREFIX)
+app.include_router(prescriptions.router, prefix=API_V1_PREFIX)
+app.include_router(orders.router, prefix=API_V1_PREFIX)
 
 app.mount(
     "/uploads", StaticFiles(directory=settings.local_storage_dir, check_dir=False), name="uploads"
