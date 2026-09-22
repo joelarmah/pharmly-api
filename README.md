@@ -44,6 +44,14 @@ cp .env.example .env   # point DATABASE_URL at your own Postgres
 .venv/bin/ruff check .
 ```
 
+**Coverage:** CI runs with coverage and posts a summary comment on every PR (gated at 90% — the suite currently sits around 95%). To check locally:
+
+```
+.venv/bin/pytest --cov=app --cov-report=term-missing
+```
+
+Coverage is measured with `concurrency = greenlet` (see `pyproject.toml`) — without it, coverage.py can't trace into SQLAlchemy's async engine and badly under-reports (measured 81% instead of the real 95% before this was set).
+
 **Seeding pricing data:**
 
 `POST /orders/pricing` needs `medication_catalog`, `pharmacies`, and `pharmacy_products` populated. Run once per environment (idempotent — safe to re-run):
