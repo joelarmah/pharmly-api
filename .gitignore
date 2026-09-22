@@ -4,6 +4,10 @@ __pycache__/
 .env
 .pytest_cache/
 .ruff_cache/
+.coverage
+coverage.xml
+pytest-results.xml
+code-coverage-results.md
 *.egg-info/
 .DS_Store
 /uploads/
