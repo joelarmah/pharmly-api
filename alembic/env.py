@@ -14,6 +14,7 @@ from app.models import (  # noqa: F401
     otp,
     payment,
     pharmacy,
+    phone_lookup_attempt,
     prescription,
     refresh_token,
     user,

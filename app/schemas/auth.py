@@ -6,6 +6,14 @@ PHONE_PATTERN = r"^\+[1-9]\d{6,14}$"
 PIN_PATTERN = r"^\d{6}$"
 
 
+class PhoneLookupRequest(BaseModel):
+    phone_number: str = Field(pattern=PHONE_PATTERN)
+
+
+class PhoneLookupResponse(BaseModel):
+    registered: bool
+
+
 class OtpRequest(BaseModel):
     phone_number: str = Field(pattern=PHONE_PATTERN)
 

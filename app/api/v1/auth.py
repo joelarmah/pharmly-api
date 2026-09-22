@@ -21,6 +21,8 @@ from app.schemas.auth import (
     OtpRequest,
     OtpVerifyRequest,
     OtpVerifyResponse,
+    PhoneLookupRequest,
+    PhoneLookupResponse,
     PinChangeRequest,
     PinResetRequest,
     PinVerifyRequest,
@@ -32,6 +34,7 @@ from app.schemas.auth import (
 from app.services import otp_service
 from app.services.auth_service import (
     assert_pin_not_locked,
+    check_phone_lookup_rate_limit,
     issue_session_tokens,
     register_pin_failure,
     reset_pin_failures,
@@ -43,6 +46,15 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 async def _get_user_by_phone(db: AsyncSession, phone_number: str) -> User | None:
     result = await db.execute(select(User).where(User.phone_number == phone_number))
     return result.scalar_one_or_none()
+
+
+@router.post("/phone/lookup", response_model=PhoneLookupResponse)
+async def lookup_phone(
+    payload: PhoneLookupRequest, db: AsyncSession = Depends(get_db)
+) -> PhoneLookupResponse:
+    await check_phone_lookup_rate_limit(db, payload.phone_number)
+    user = await _get_user_by_phone(db, payload.phone_number)
+    return PhoneLookupResponse(registered=user is not None)
 
 
 @router.post("/otp/request", status_code=status.HTTP_204_NO_CONTENT)
