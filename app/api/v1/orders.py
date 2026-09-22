@@ -5,25 +5,26 @@ from app.api.deps import get_current_user
 from app.db.session import get_db
 from app.models.user import User
 from app.schemas.orders import OrderOut, PlaceOrderRequest, PlaceOrderResponse
-from app.schemas.pricing import MedicationPricingLineOut, PharmacyOfferOut, PricingRequest
+from app.schemas.pricing import PharmacyOfferOut, PricingRequest
 from app.services import order_service, pricing_service
 
 router = APIRouter(prefix="/orders", tags=["orders"])
 
 
-@router.post("/pricing", response_model=list[PharmacyOfferOut] | list[MedicationPricingLineOut])
+@router.post("/pricing", response_model=list[PharmacyOfferOut])
 async def get_pricing(
     payload: PricingRequest,
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
-) -> list[PharmacyOfferOut] | list[MedicationPricingLineOut]:
-    """Two different response shapes depending on `order_type`:
+) -> list[PharmacyOfferOut]:
+    """Same flat response shape for both `order_type` values:
 
-    - singleLine: one bundled PharmacyOffer per pharmacy for the whole
-      prescription.
-    - multiLine: one MedicationPricingLine per medication, each listing
-      every pharmacy that carries it (no cross-pharmacy splitting logic --
-      the client composes the final order from these).
+    - singleLine: one bundled offer per pharmacy for the whole
+      prescription, medication_id is null.
+    - multiLine: one offer per (medication, pharmacy-that-carries-it) pair,
+      medication_id set so the client can group rows per medication (no
+      cross-pharmacy splitting logic -- the client composes the final order
+      from these).
     """
     if payload.order_type == "singleLine":
         return await pricing_service.price_bundle(

@@ -270,34 +270,29 @@ This is the biggest *new* domain — there is no existing pharmacy/inventory mod
 ```
 `rating`, `distance_km`, `eta_minutes` are optional (nullable) — the client already handles their absence. `currency` defaults to `"GHS"` client-side if omitted, but send it explicitly. **`latitude`/`longitude` are not in the original mock's request shape** — added so `distance_km`/`eta_minutes` can actually be computed (straight-line haversine distance from the customer to each pharmacy, plus a fixed prep-time + average-speed ETA estimate — no real routing/traffic data). The mobile app already collects device location elsewhere in the app; without these two fields, `distance_km`/`eta_minutes` are always `null` in the response. Flag this to the mobile team as a small addition to the pricing call, not a breaking change (both fields are optional).
 
-**`multiLine`** — **implemented for real, not deferred as originally scoped** (see §8): the prescription is split apart, each medication gets quoted separately, and different pharmacies can win different line items — the client composes the final order from these, it isn't auto-split server-side:
+**`multiLine`** — **implemented for real, not deferred as originally scoped** (see §8): the prescription is split apart, each medication gets quoted separately, and different pharmacies can win different line items — the client composes the final order from these, it isn't auto-split server-side.
+
+**Corrected below** — an earlier pass through this section documented a nested response shape (`MedicationPricingLine[]`, each wrapping an `offers[]`) that turned out not to match the mobile client at all. Cross-checking directly against the Flutter source (`OrdersRepository.fetchPricing()` / `PharmacyOffer.fromJson`) found the client parses **the exact same flat `PharmacyOffer[]` shape as `singleLine`**, for both order types, via one shared code path. The real, now-implemented contract:
 ```json
 // Request
 { "prescription_id": "PR123456", "order_type": "multiLine", "latitude": 5.6037, "longitude": -0.1870 }
-// Response 200 — array of MedicationPricingLine, one per submitted medication
+// Response 200 — same PharmacyOffer array shape as singleLine, one row per
+// (medication, pharmacy-that-carries-it) pair
 [
   {
-    "medication_id": "med_1",
-    "name": "Amoxicillin",
-    "dosage": "500",
-    "dosage_unit": "mg",
-    "quantity": 21,
-    "offers": [
-      {
-        "pharmacy_id": "ph_1",
-        "pharmacy_name": "Ernest Chemists - Spintex",
-        "unit_price": 2.0,
-        "subtotal": 42.0,
-        "currency": "GHS",
-        "rating": 4.8,
-        "distance_km": 0.8,
-        "eta_minutes": 25
-      }
-    ]
+    "pharmacy_id": "ph_1",
+    "pharmacy_name": "Ernest Chemists - Spintex",
+    "total_price": 42.0,
+    "currency": "GHS",
+    "is_fully_in_stock": true,
+    "rating": 4.8,
+    "distance_km": 0.8,
+    "eta_minutes": 25,
+    "medication_id": "med_1"
   }
 ]
 ```
-`offers` is sorted cheapest-first and is `[]` (not omitted) when no pharmacy carries that medication or it isn't in the catalog — a medication with zero offers doesn't remove it from the response array.
+`medication_id` is the field that distinguishes the two modes: always `null`/absent for `singleLine` (one row per pharmacy, no medication grouping), always set for `multiLine` (one row per medication × pharmacy, used to group rows client-side — see `select_pharmacy_screen.dart`'s `checkout.offers.where((o) => o.medicationId == medication.id)`). `total_price` for a `multiLine` row is that single medication's price at that pharmacy (`quantity × unit_price`), reusing the same field name `singleLine` uses for its bundle total. `is_fully_in_stock` is always `true` for a `multiLine` row — its existence already means that exact pharmacy carries that exact medication. Rows are sorted cheapest-first within each medication group. A medication with no catalog match or no carrying pharmacy simply contributes zero rows — it never appears as a group, rather than appearing with an empty `offers: []` as the earlier (incorrect) shape did.
 
 **Needed supporting data model (your design call):** a `Pharmacy` entity (id, name, location, rating) and some form of per-medication price list / inventory per pharmacy, so pricing can be computed from the submitted prescription's actual medications rather than hardcoded. Minimum viable: a manually-maintained price table per partner pharmacy; `distance_km` computed from the customer's delivery address (geocoded) to each pharmacy's location.
 
