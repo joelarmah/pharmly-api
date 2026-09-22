@@ -14,7 +14,14 @@ class PricingRequest(BaseModel):
 
 
 class PharmacyOfferOut(BaseModel):
-    """singleLine response: one bundled quote per pharmacy."""
+    """singleLine: one bundled quote per pharmacy (medication_id is null).
+
+    multiLine: one row per (medication, pharmacy-that-carries-it) pair --
+    total_price is that single medication's line price at this pharmacy,
+    medication_id groups rows on the client. Same response type for both
+    modes: the mobile client's PharmacyOffer.fromJson parses a flat array
+    either way.
+    """
 
     pharmacy_id: str
     pharmacy_name: str
@@ -24,27 +31,4 @@ class PharmacyOfferOut(BaseModel):
     rating: float | None
     distance_km: float | None
     eta_minutes: int | None
-
-
-class MedicationLineOfferOut(BaseModel):
-    """multiLine response: one pharmacy's quote for a single medication."""
-
-    pharmacy_id: str
-    pharmacy_name: str
-    unit_price: float
-    subtotal: float
-    currency: str
-    rating: float | None
-    distance_km: float | None
-    eta_minutes: int | None
-
-
-class MedicationPricingLineOut(BaseModel):
-    """multiLine response: one medication and every pharmacy that carries it."""
-
-    medication_id: str
-    name: str
-    dosage: str
-    dosage_unit: str
-    quantity: int
-    offers: list[MedicationLineOfferOut]
+    medication_id: str | None = None

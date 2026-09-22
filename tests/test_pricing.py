@@ -248,6 +248,8 @@ async def test_multi_line_different_pharmacies_win_different_medications(
 ) -> None:
     headers = await _auth_headers(client, fake_sms)
     prescription = await _submit_prescription(client, headers, [MED_A, MED_B])
+    med_a_id = prescription["medications"][0]["id"]
+    med_b_id = prescription["medications"][1]["id"]
 
     catalog_a = await _add_catalog_entry(db_session, "Amoxicillin", "500", "mg")
     catalog_b = await _add_catalog_entry(db_session, "Paracetamol", "500", "mg")
@@ -262,15 +264,18 @@ async def test_multi_line_different_pharmacies_win_different_medications(
         headers=headers,
     )
     assert resp.status_code == 200
-    lines = {line["name"]: line for line in resp.json()}
+    offers = resp.json()
 
-    assert [o["pharmacy_id"] for o in lines["Amoxicillin"]["offers"]] == ["ph_a_only"]
-    assert lines["Amoxicillin"]["offers"][0]["subtotal"] == 21 * 2.0
-    assert [o["pharmacy_id"] for o in lines["Paracetamol"]["offers"]] == ["ph_b_only"]
-    assert lines["Paracetamol"]["offers"][0]["subtotal"] == 10 * 1.0
+    a_offers = [o for o in offers if o["medication_id"] == med_a_id]
+    b_offers = [o for o in offers if o["medication_id"] == med_b_id]
+    assert [o["pharmacy_id"] for o in a_offers] == ["ph_a_only"]
+    assert a_offers[0]["total_price"] == 21 * 2.0
+    assert a_offers[0]["is_fully_in_stock"] is True
+    assert [o["pharmacy_id"] for o in b_offers] == ["ph_b_only"]
+    assert b_offers[0]["total_price"] == 10 * 1.0
 
 
-async def test_multi_line_medication_with_no_pharmacy_has_empty_offers(
+async def test_multi_line_medication_with_no_pharmacy_contributes_no_rows(
     client: AsyncClient, fake_sms: FakeSmsSender, db_session: AsyncSession
 ) -> None:
     headers = await _auth_headers(client, fake_sms)
@@ -284,12 +289,10 @@ async def test_multi_line_medication_with_no_pharmacy_has_empty_offers(
         headers=headers,
     )
     assert resp.status_code == 200
-    lines = resp.json()
-    assert len(lines) == 1
-    assert lines[0]["offers"] == []
+    assert resp.json() == []
 
 
-async def test_multi_line_offers_sorted_by_unit_price(
+async def test_multi_line_rows_sorted_by_total_price(
     client: AsyncClient, fake_sms: FakeSmsSender, db_session: AsyncSession
 ) -> None:
     headers = await _auth_headers(client, fake_sms)
@@ -307,5 +310,5 @@ async def test_multi_line_offers_sorted_by_unit_price(
         headers=headers,
     )
     assert resp.status_code == 200
-    offers = resp.json()[0]["offers"]
+    offers = resp.json()
     assert [o["pharmacy_id"] for o in offers] == ["ph_cheap", "ph_expensive"]

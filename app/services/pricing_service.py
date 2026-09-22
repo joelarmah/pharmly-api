@@ -7,7 +7,7 @@ from app.core.exceptions import ApiError
 from app.core.geo import estimate_eta_minutes, haversine_km
 from app.models.pharmacy import DosageUnit, MedicationCatalog, Pharmacy, PharmacyProduct
 from app.models.prescription import Medication, Prescription
-from app.schemas.pricing import MedicationLineOfferOut, MedicationPricingLineOut, PharmacyOfferOut
+from app.schemas.pricing import PharmacyOfferOut
 
 CURRENCY = "GHS"
 
@@ -121,45 +121,37 @@ async def price_per_medication(
     prescription_id: str,
     latitude: float | None,
     longitude: float | None,
-) -> list[MedicationPricingLineOut]:
+) -> list[PharmacyOfferOut]:
     prescription = await _load_owned_prescription(db, user_id, prescription_id)
 
-    lines = []
+    offers: list[PharmacyOfferOut] = []
     for med in prescription.medications:
         catalog = await _match_catalog(db, med)
-        offers: list[MedicationLineOfferOut] = []
+        if catalog is None:
+            continue
 
-        if catalog is not None:
-            result = await db.execute(
-                select(PharmacyProduct, Pharmacy)
-                .join(Pharmacy, Pharmacy.id == PharmacyProduct.pharmacy_id)
-                .where(PharmacyProduct.catalog_id == catalog.id)
-            )
-            for price, pharmacy in result.all():
-                distance_km, eta_minutes = _distance_and_eta(latitude, longitude, pharmacy)
-                offers.append(
-                    MedicationLineOfferOut(
-                        pharmacy_id=pharmacy.id,
-                        pharmacy_name=pharmacy.name,
-                        unit_price=price.unit_price,
-                        subtotal=round(med.quantity * price.unit_price, 2),
-                        currency=CURRENCY,
-                        rating=pharmacy.rating,
-                        distance_km=distance_km,
-                        eta_minutes=eta_minutes,
-                    )
-                )
-            offers.sort(key=lambda offer: offer.unit_price)
-
-        lines.append(
-            MedicationPricingLineOut(
-                medication_id=med.id,
-                name=med.name,
-                dosage=med.dosage,
-                dosage_unit=med.dosage_unit,
-                quantity=med.quantity,
-                offers=offers,
-            )
+        med_offers: list[PharmacyOfferOut] = []
+        result = await db.execute(
+            select(PharmacyProduct, Pharmacy)
+            .join(Pharmacy, Pharmacy.id == PharmacyProduct.pharmacy_id)
+            .where(PharmacyProduct.catalog_id == catalog.id)
         )
+        for price, pharmacy in result.all():
+            distance_km, eta_minutes = _distance_and_eta(latitude, longitude, pharmacy)
+            med_offers.append(
+                PharmacyOfferOut(
+                    pharmacy_id=pharmacy.id,
+                    pharmacy_name=pharmacy.name,
+                    total_price=round(med.quantity * price.unit_price, 2),
+                    currency=CURRENCY,
+                    is_fully_in_stock=True,
+                    rating=pharmacy.rating,
+                    distance_km=distance_km,
+                    eta_minutes=eta_minutes,
+                    medication_id=med.id,
+                )
+            )
+        med_offers.sort(key=lambda offer: offer.total_price)
+        offers.extend(med_offers)
 
-    return lines
+    return offers
