@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     otp_request_cooldown_seconds: int = 60
     otp_request_max_per_hour: int = 5
 
+    phone_lookup_cooldown_seconds: int = 3
+    phone_lookup_max_per_hour: int = 30
+
     pin_max_failed_attempts: int = 5
     pin_lockout_minutes: int = 15
 

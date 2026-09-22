@@ -62,6 +62,7 @@ Return this shape (a `message` string key) on every 4xx/5xx. FastAPI's default `
 - `POST /orders` (place order) and the Paystack initialize call should be **idempotent** per client-generated reference/idempotency key — a retried request (e.g. after a timeout where the first attempt actually succeeded) must not double-charge or double-place.
 
 ### 4.5 Rate limiting & abuse prevention
+- `POST /auth/phone/lookup`: rate-limit per phone number (3s cooldown, 30 per hour) — looser than OTP's since it's a cheap read with no SMS cost, just enough to blunt a script re-checking one number. See §5.1 for why this endpoint's very purpose (disclosing whether a number is registered) means per-number throttling is the only protection it has — it does not stop a slow sweep across many different numbers, which would need IP-based limiting this codebase doesn't have anywhere today.
 - `POST /auth/otp/request`: rate-limit per phone number (e.g. 1 per 60s, 5 per hour) — this sends a real SMS and costs money per send.
 - `POST /auth/login`, `POST /auth/pin/verify`, `POST /auth/pin/change`: lock out / backoff after N consecutive wrong-PIN attempts per account (the client already has UX for a PIN-mismatch error — see §5.1 — so a 429/423 here should map to a clear `message`).
 - OTP codes: 6 digits, single-use, expire in ~5 minutes.
@@ -77,6 +78,15 @@ All server-generated primary key ids (`users.id`, `prescriptions.id`, `medicatio
 ### 5.1 Auth
 
 Every flow below matches `lib/features/auth/data/auth_repository.dart` exactly.
+
+**`POST /auth/phone/lookup`** *(new)* — the actual first call in the real login flow: routes `LoginScreen` to PIN-login (registered) or OTP-signup (not registered). Replaces the client's current local-storage stand-in, `AuthRepository.isPhoneRegistered()`.
+```json
+// Request
+{ "phone_number": "+233241234567" }
+// Response 200
+{ "registered": true }
+```
+**Necessarily unauthenticated and, by design, discloses whether a phone number has an account** — that's its entire purpose, there's no way to route the UI without it. This is worth being explicit about: `POST /auth/login` below deliberately returns the *same* 401 message for "wrong PIN" and "no such account" specifically to avoid revealing account existence, but that protection is largely cosmetic once this endpoint exists — this is the real, load-bearing disclosure point, and login's anonymized message only guards a secondary vector. **Rate limiting** (§4.5): a per-phone-number cooldown (3s) + hourly cap (30/hour), mirroring the OTP endpoint's pattern but looser since this is a cheap read with no SMS cost. This only blunts a script re-checking one number — it does **not** stop a slow sweep across many different numbers, which would need IP-based throttling this codebase has no infrastructure for today. Accepted as a stated v1 limitation rather than a silent gap; revisit if it's ever actually abused. **Errors**: `429` on either rate limit ("Please wait before checking again." / "Too many attempts. Please try again later.").
 
 **`POST /auth/otp/request`** — send an OTP. Used by both Sign Up and Forgot PIN.
 ```json
@@ -470,6 +480,7 @@ For quick cross-reference against the Flutter source (`lib/features/*/data/*_rep
 
 | Client method | Endpoint | Status |
 |---|---|---|
+| `AuthRepository.isPhoneRegistered` | `POST /auth/phone/lookup` | Built |
 | `AuthRepository.requestOtp` | `POST /auth/otp/request` | Built |
 | `AuthRepository.verifyOtp` | `POST /auth/otp/verify` | Built |
 | `AuthRepository.completeRegistration` | `POST /auth/register` | Built |

@@ -50,6 +50,46 @@ async def test_otp_request_rate_limited_on_cooldown(
     assert "message" in resp2.json()
 
 
+async def test_phone_lookup_returns_true_for_registered_number(
+    client: AsyncClient, fake_sms: FakeSmsSender
+) -> None:
+    await signup(client, fake_sms)
+    resp = await client.post("/v1/auth/phone/lookup", json={"phone_number": PHONE})
+    assert resp.status_code == 200
+    assert resp.json() == {"registered": True}
+
+
+async def test_phone_lookup_returns_false_for_unknown_number(client: AsyncClient) -> None:
+    resp = await client.post("/v1/auth/phone/lookup", json={"phone_number": "+233209999999"})
+    assert resp.status_code == 200
+    assert resp.json() == {"registered": False}
+
+
+async def test_phone_lookup_rate_limited_on_cooldown(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(settings, "phone_lookup_cooldown_seconds", 60)
+
+    resp1 = await client.post("/v1/auth/phone/lookup", json={"phone_number": PHONE})
+    assert resp1.status_code == 200
+    resp2 = await client.post("/v1/auth/phone/lookup", json={"phone_number": PHONE})
+    assert resp2.status_code == 429
+    assert "message" in resp2.json()
+
+
+async def test_phone_lookup_rate_limited_on_hourly_cap(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(settings, "phone_lookup_cooldown_seconds", 0)
+    monkeypatch.setattr(settings, "phone_lookup_max_per_hour", 1)
+
+    resp1 = await client.post("/v1/auth/phone/lookup", json={"phone_number": PHONE})
+    assert resp1.status_code == 200
+    resp2 = await client.post("/v1/auth/phone/lookup", json={"phone_number": PHONE})
+    assert resp2.status_code == 429
+    assert "message" in resp2.json()
+
+
 async def test_register_happy_path(client: AsyncClient, fake_sms: FakeSmsSender) -> None:
     body = await signup(client, fake_sms)
     assert body["user"]["phone_number"] == PHONE
